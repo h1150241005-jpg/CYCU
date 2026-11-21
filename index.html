@@ -1,0 +1,2676 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>中原美食日常｜CYCU Food Daily</title>
+  <!-- Google Fonts: Noto Serif TC, Noto Sans TC & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@600;700;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti for Wheel Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: {
+              950: '#0D0B0A',
+              900: '#12100E',
+              850: '#171412',
+              800: '#1C1917',
+              750: '#221E1B',
+              700: '#26221F',
+              600: '#2E2925',
+              500: '#3D3631',
+            },
+            amberwarm: {
+              300: '#F5A36C',
+              400: '#F28B48',
+              500: '#E87A35',
+              600: '#C96120',
+              700: '#9E4814',
+            },
+            honey: {
+              400: '#F7C05C',
+              500: '#F5B041',
+            },
+            ivory: {
+              100: '#F5F0EB',
+              200: '#D6CEC5',
+              300: '#968B80',
+              400: '#6E645B',
+            },
+            sage: {
+              500: '#6B9966',
+              600: '#527A4E',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+            serif: ['"Noto Serif TC"', 'serif'],
+          },
+          boxShadow: {
+            'editorial': '0 12px 32px -6px rgba(0, 0, 0, 0.55), 0 4px 12px -2px rgba(0, 0, 0, 0.35)',
+            'editorial-hover': '0 20px 44px -8px rgba(232, 122, 53, 0.22), 0 8px 18px -4px rgba(0, 0, 0, 0.5)',
+            'bento': '0 4px 16px rgba(0, 0, 0, 0.4)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #12100E;
+      background-image: radial-gradient(circle at 82% 8%, rgba(232, 122, 53, 0.08) 0%, transparent 42%),
+                        radial-gradient(circle at 12% 88%, rgba(245, 176, 65, 0.05) 0%, transparent 45%);
+      color: #F5F0EB;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    .font-editorial {
+      font-family: 'Noto Serif TC', serif;
+    }
+
+    /* Dark Mode Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #12100E;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2E2925;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #473F39;
+    }
+
+    /* Dark Editorial Card & Bento Effects */
+    .bento-card {
+      background: #1C1917;
+      border: 1px solid #2E2925;
+      border-radius: 1.5rem;
+      box-shadow: 0 12px 32px -6px rgba(0, 0, 0, 0.5);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease, background-color 0.25s ease;
+    }
+    .bento-card-hover:hover {
+      transform: translateY(-3px);
+      background: #221E1B;
+      box-shadow: 0 20px 44px -8px rgba(232, 122, 53, 0.18), 0 8px 18px -4px rgba(0, 0, 0, 0.55);
+      border-color: rgba(232, 122, 53, 0.45);
+    }
+
+    /* Smooth Image Fade-in & Zoom */
+    .food-photo {
+      opacity: 0;
+      transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .food-photo.loaded {
+      opacity: 1;
+    }
+    .group:hover .food-photo-zoom {
+      transform: scale(1.05);
+    }
+
+    /* Wheel Pointer Bounce */
+    @keyframes pointerTick {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      50% { transform: translateX(-50%) rotate(-14deg); }
+    }
+    .pointer-ticking {
+      animation: pointerTick 0.14s ease-in-out infinite;
+    }
+
+    /* Fade In View Transition */
+    .view-animate {
+      animation: fadeSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Hide scrollbar for horizontal chips on mobile */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row selection:bg-amberwarm-500/30 selection:text-amberwarm-300">
+
+  <!-- ==================== DESKTOP LEFT FIXED SIDEBAR ==================== -->
+  <aside class="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 bg-obsidian-850/95 backdrop-blur-md border-r border-obsidian-600 z-30 px-5 py-7 justify-between">
+    <div>
+      <!-- Brand Identity -->
+      <div class="flex items-center gap-3.5 px-2 mb-7 cursor-pointer" onclick="switchTab('wheel')">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amberwarm-500 to-amberwarm-600 flex items-center justify-center text-white shadow-lg shadow-amberwarm-500/25 shrink-0">
+          <i data-lucide="utensils-crossed" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-[11px] font-bold tracking-widest uppercase text-amberwarm-400 block">CYCU FOOD DAILY</span>
+          <h1 class="text-lg font-editorial font-black text-ivory-100 tracking-tight leading-tight">中原美食日常</h1>
+        </div>
+      </div>
+
+      <!-- Editorial Daily Issue Tag -->
+      <div class="mx-1 mb-6 p-3.5 rounded-2xl bg-obsidian-800 border border-obsidian-600">
+        <div class="flex items-center justify-between text-xs text-ivory-300 mb-1">
+          <span class="font-semibold flex items-center gap-1.5 text-ivory-200">
+            <span class="w-2 h-2 rounded-full bg-sage-500 animate-pulse"></span>
+            中原深夜食光誌
+          </span>
+          <span id="sidebar-count-badge" class="font-bold text-amberwarm-400 bg-amberwarm-500/15 border border-amberwarm-500/30 px-2 py-0.5 rounded-full">8 間精選</span>
+        </div>
+        <p class="text-xs text-ivory-300 leading-relaxed">
+          下課或宵夜不知道吃什麼？轉動今日食光轉盤，發掘中原周邊真實好味道。
+        </p>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="space-y-1.5" id="desktop-nav">
+        <button data-tab="wheel" onclick="switchTab('wheel')" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all">
+          <i data-lucide="compass" class="w-5 h-5"></i>
+          <span>美食轉盤</span>
+          <span class="ml-auto text-[11px] px-2 py-0.5 rounded-full bg-amberwarm-500/20 text-amberwarm-300 font-bold">抽籤</span>
+        </button>
+
+        <button data-tab="restaurants" onclick="switchTab('restaurants')" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all">
+          <i data-lucide="store" class="w-5 h-5"></i>
+          <span>餐廳與餐點</span>
+        </button>
+
+        <button data-tab="favorites" onclick="switchTab('favorites')" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all">
+          <i data-lucide="heart" class="w-5 h-5"></i>
+          <span>收藏店家</span>
+          <span id="nav-fav-count" class="ml-auto text-xs px-2 py-0.5 rounded-full bg-obsidian-700 text-ivory-100 font-bold">1</span>
+        </button>
+
+        <button data-tab="reviews" onclick="switchTab('reviews')" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all">
+          <i data-lucide="message-square-heart" class="w-5 h-5"></i>
+          <span>分享評論</span>
+          <span id="nav-review-count" class="ml-auto text-xs px-2 py-0.5 rounded-full bg-obsidian-700 text-ivory-100 font-bold">8</span>
+        </button>
+
+        <button data-tab="add" onclick="switchTab('add')" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+          <span>新增餐廳</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Bottom Featured Spotlight with Real Photo -->
+    <div class="pt-4 border-t border-obsidian-600">
+      <div class="rounded-2xl bg-obsidian-800 border border-obsidian-600 overflow-hidden cursor-pointer hover:border-amberwarm-500/60 transition group" onclick="openRestaurantDetail('aniki-zhongli')">
+        <div class="h-24 w-full overflow-hidden relative bg-obsidian-900">
+          <img
+            src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80"
+            alt="阿尼基美式餐廳 中壢店"
+            onload="this.classList.add('loaded')"
+            onerror="handleImgError(this, 'western')"
+            class="food-photo food-photo-zoom w-full h-full object-cover"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-obsidian-900/80 via-transparent to-transparent"></div>
+          <span class="absolute top-2 left-2 inline-flex items-center gap-1 text-[10px] font-extrabold text-ivory-100 bg-obsidian-950/85 backdrop-blur-sm border border-amberwarm-500/40 px-2.5 py-0.5 rounded-full">
+            <i data-lucide="flame" class="w-3 h-3 text-amberwarm-400 fill-amberwarm-400"></i>
+            本期封面主打
+          </span>
+        </div>
+        <div class="p-3">
+          <p class="text-sm font-extrabold text-ivory-100 truncate group-hover:text-amberwarm-400 transition">阿尼基美式餐廳 中壢店</p>
+          <p class="text-[11px] text-ivory-300 mt-0.5">大仁二街・步行約 3 分鐘</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================== MOBILE TOP HEADER ==================== -->
+  <header class="lg:hidden sticky top-0 z-30 bg-obsidian-850/95 backdrop-blur-md border-b border-obsidian-600 px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2.5" onclick="switchTab('wheel')">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amberwarm-500 to-amberwarm-600 flex items-center justify-center text-white shadow-sm">
+        <i data-lucide="utensils-crossed" class="w-4 h-4"></i>
+      </div>
+      <div>
+        <h1 class="text-base font-editorial font-black text-ivory-100 leading-none">中原美食日常</h1>
+        <span class="text-[10px] font-bold tracking-wider text-amberwarm-400 uppercase">CYCU Food Daily</span>
+      </div>
+    </div>
+    <button onclick="openRestaurantDetail('aniki-zhongli')" class="flex items-center gap-1.5 text-xs font-bold bg-amberwarm-500/15 text-amberwarm-300 border border-amberwarm-500/35 px-3 py-1.5 rounded-full active:scale-95 transition">
+      <i data-lucide="flame" class="w-3.5 h-3.5 text-amberwarm-400 fill-amberwarm-400"></i>
+      <span>主打：阿尼基</span>
+    </button>
+  </header>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="flex-1 lg:pl-72 pb-24 lg:pb-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-5 lg:pt-9">
+
+      <!-- =====================================================================
+           MODULE 1: 美食轉盤 (FOOD WHEEL)
+      ====================================================================== -->
+      <section id="view-wheel" class="view-section view-animate">
+        <!-- Editorial Header -->
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amberwarm-500/15 border border-amberwarm-500/30 text-amberwarm-300 text-xs font-bold mb-2">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>TODAY'S PICK・今日食光轉盤</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-editorial font-black text-ivory-100 tracking-tight">今天在中原吃什麼？</h2>
+            <p class="text-sm text-ivory-300 mt-1">勾選想納入抽選的中原周邊店家，轉動轉盤交給命運決定這一餐！</p>
+          </div>
+          <div class="flex items-center gap-2 self-start sm:self-auto">
+            <button onclick="selectAllWheel(true)" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-obsidian-800 border border-obsidian-600 text-ivory-200 hover:border-amberwarm-500 hover:text-amberwarm-300 transition cursor-pointer">
+              全選店家
+            </button>
+            <button onclick="selectFavoritesForWheel()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-amberwarm-500/15 border border-amberwarm-500/35 text-amberwarm-300 hover:bg-amberwarm-500/25 transition flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="heart" class="w-3.5 h-3.5 fill-amberwarm-400 text-amberwarm-400"></i>
+              <span>僅抽我的收藏</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bento Grid: Wheel + Checklist & Result -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- Left: Interactive Dark Gourmet Wheel Card (7 cols) -->
+          <div class="lg:col-span-7 bento-card p-6 sm:p-8 flex flex-col items-center justify-center relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-amberwarm-500/10 blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-honey-500/5 blur-2xl pointer-events-none"></div>
+
+            <!-- Wheel Container -->
+            <div class="relative w-full max-w-[360px] sm:max-w-[400px] aspect-square flex items-center justify-center my-2">
+              <!-- Top Pointer -->
+              <div id="wheel-pointer" class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">
+                <svg width="38" height="44" viewBox="0 0 38 44" fill="none">
+                  <path d="M19 43L3.5 14C1.5 10.2 4.2 5.5 8.5 5.5H29.5C33.8 5.5 36.5 10.2 34.5 14L19 43Z" fill="#F5B041" stroke="#12100E" stroke-width="3"/>
+                  <circle cx="19" cy="14" r="4.5" fill="#12100E"/>
+                </svg>
+              </div>
+
+              <!-- Outer Rim -->
+              <div class="w-full h-full rounded-full p-3 bg-gradient-to-b from-obsidian-700 to-obsidian-950 shadow-[inset_0_2px_12px_rgba(0,0,0,0.8),0_0_30px_rgba(232,122,53,0.12)] border border-obsidian-500 flex items-center justify-center relative">
+                <canvas id="food-wheel-canvas" class="w-full h-full rounded-full block"></canvas>
+
+                <!-- Center Spin Button -->
+                <button id="spin-btn" onclick="spinWheel()" class="absolute z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-amberwarm-500 to-amberwarm-600 hover:from-amberwarm-400 hover:to-amberwarm-500 active:scale-95 text-white font-extrabold text-sm sm:text-base shadow-[0_0_24px_rgba(232,122,53,0.5)] border-4 border-obsidian-900 flex flex-col items-center justify-center transition-all duration-200 cursor-pointer group">
+                  <span class="tracking-wider">開始轉</span>
+                  <span class="text-[10px] font-semibold text-ivory-100/90 group-hover:text-white mt-0.5">SPIN</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Wheel Status Hint -->
+            <p id="wheel-status-text" class="mt-4 text-xs sm:text-sm font-medium text-ivory-300 text-center">
+              目前共有 <span id="wheel-active-count" class="font-bold text-amberwarm-400">8</span> 間餐廳參與抽選
+            </p>
+          </div>
+
+          <!-- Right: Winner Result Card + Candidate Checkboxes (5 cols) -->
+          <div class="lg:col-span-5 space-y-5">
+            
+            <!-- Result Spotlight Card with Real Food Photo -->
+            <div id="wheel-result-card" class="bento-card overflow-hidden border border-amberwarm-500/45 bg-gradient-to-br from-obsidian-800 via-obsidian-800 to-obsidian-750 transition-all">
+              <!-- Hero Photo Banner -->
+              <div class="relative h-44 sm:h-48 w-full bg-obsidian-900 overflow-hidden">
+                <img
+                  id="result-photo"
+                  src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1000&q=85"
+                  alt="推薦餐廳招牌料理"
+                  onload="this.classList.add('loaded')"
+                  onerror="handleImgError(this, 'western')"
+                  class="food-photo w-full h-full object-cover"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-obsidian-900/25 to-transparent"></div>
+                <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 text-xs font-extrabold tracking-wider text-white bg-amberwarm-500/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-md">
+                  <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                  <span id="result-badge-label">今日主廚推薦・預設主打</span>
+                </span>
+                <span class="absolute top-3 right-3 text-[10px] font-bold text-ivory-100 bg-obsidian-950/80 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-full">
+                  實拍美食影像
+                </span>
+                <span id="result-walk-time" class="absolute bottom-3 right-3 text-xs font-bold text-ivory-100 bg-obsidian-950/85 backdrop-blur-sm border border-obsidian-600 px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <i data-lucide="footprints" class="w-3.5 h-3.5 text-amberwarm-400"></i>
+                  <span>步行約 3 分鐘</span>
+                </span>
+              </div>
+
+              <div class="p-5 sm:p-6">
+                <h3 id="result-name" class="text-xl sm:text-2xl font-editorial font-black text-ivory-100 leading-snug">
+                  阿尼基美式餐廳 中壢店
+                </h3>
+                <p id="result-category" class="text-xs font-semibold text-ivory-300 mt-1">
+                  美式漢堡・早午餐拼盤 ｜ 參考消費 $220 - $380
+                </p>
+
+                <!-- Signature Dishes Preview -->
+                <div class="mt-4 pt-3.5 border-t border-obsidian-600">
+                  <span class="text-[11px] font-bold text-ivory-300 block mb-2">招牌必點推薦：</span>
+                  <div id="result-dishes" class="flex flex-wrap gap-1.5">
+                    <!-- Populated by JS -->
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-2.5 mt-5">
+                  <button id="result-detail-btn" onclick="openRestaurantDetail('aniki-zhongli')" class="py-2.5 px-3.5 rounded-xl bg-obsidian-700 hover:bg-obsidian-600 border border-obsidian-500 text-ivory-100 text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                    <i data-lucide="book-open" class="w-4 h-4 text-amberwarm-400"></i>
+                    <span>查看餐廳詳情</span>
+                  </button>
+                  <a id="result-map-btn" href="https://www.google.com/maps/place/%E9%98%BF%E5%B0%BC%E5%9F%BA%E7%BE%8E%E5%BC%8F%E9%A4%90%E5%BB%B3+%E4%B8%AD%E5%A3%A2%E5%BA%97%EF%BC%88%E6%9C%80%E5%BE%8C%E5%87%BA%E9%A4%90%E6%99%82%E9%96%9319:30/@24.9555307,121.1601691,12z/data=!4m7!3m6!1s0x34682214e297e491:0x274fceb79c7999d!8m2!3d24.9546169!4d121.242425" target="_blank" rel="noopener noreferrer" class="py-2.5 px-3.5 rounded-xl bg-amberwarm-500 hover:bg-amberwarm-400 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 shadow-md shadow-amberwarm-500/20 transition">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    <span>開啟 Google 地圖</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Candidate Selection Card -->
+            <div class="bento-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="text-sm font-extrabold text-ivory-100 flex items-center gap-2">
+                  <i data-lucide="list-checks" class="w-4 h-4 text-amberwarm-400"></i>
+                  <span>參與轉盤名單</span>
+                </h4>
+                <button onclick="selectAllWheel(false)" class="text-xs font-semibold text-ivory-300 hover:text-amberwarm-400 transition cursor-pointer">
+                  取消全選
+                </button>
+              </div>
+              <div id="wheel-checklist" class="max-h-64 overflow-y-auto pr-1 space-y-2">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           MODULE 2A: 餐廳與餐點 — 列表視圖 (RESTAURANTS LIST)
+      ====================================================================== -->
+      <section id="view-restaurants" class="view-section hidden view-animate">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-obsidian-800 border border-obsidian-600 text-ivory-200 text-xs font-bold mb-2">
+              <i data-lucide="map" class="w-3.5 h-3.5 text-amberwarm-400"></i>
+              <span>CYCU CAMPUS GUIDE・中原周邊食肆</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-editorial font-black text-ivory-100 tracking-tight">餐廳與餐點總覽</h2>
+            <p class="text-sm text-ivory-300 mt-1">精選中原大學正門、大仁二街、實踐路與中山東路人氣美食實拍地圖。</p>
+          </div>
+
+          <!-- Search Box -->
+          <div class="relative w-full md:w-80">
+            <i data-lucide="search" class="w-4 h-4 text-ivory-300 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input
+              id="restaurant-search"
+              type="text"
+              oninput="renderRestaurantsList()"
+              placeholder="搜尋店名、地址、招牌餐點..."
+              class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25 transition"
+            />
+          </div>
+        </div>
+
+        <!-- Category Filter Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-6" id="category-filters">
+          <button data-cat="all" onclick="setCategoryFilter('all')" class="cat-chip px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap bg-amberwarm-500 text-white shadow-sm cursor-pointer">
+            全部店家
+          </button>
+          <button data-cat="western" onclick="setCategoryFilter('western')" class="cat-chip px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap bg-obsidian-800 text-ivory-200 border border-obsidian-600 hover:border-amberwarm-500 cursor-pointer">
+            美式漢堡
+          </button>
+          <button data-cat="steak" onclick="setCategoryFilter('steak')" class="cat-chip px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap bg-obsidian-800 text-ivory-200 border border-obsidian-600 hover:border-amberwarm-500 cursor-pointer">
+            排餐牛排
+          </button>
+          <button data-cat="asian" onclick="setCategoryFilter('asian')" class="cat-chip px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap bg-obsidian-800 text-ivory-200 border border-obsidian-600 hover:border-amberwarm-500 cursor-pointer">
+            日韓 / 咖哩
+          </button>
+          <button data-cat="local" onclick="setCategoryFilter('local')" class="cat-chip px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap bg-obsidian-800 text-ivory-200 border border-obsidian-600 hover:border-amberwarm-500 cursor-pointer">
+            台式麵食 / 湯包
+          </button>
+          <button data-cat="dessert" onclick="setCategoryFilter('dessert')" class="cat-chip px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap bg-obsidian-800 text-ivory-200 border border-obsidian-600 hover:border-amberwarm-500 cursor-pointer">
+            甜品飲料
+          </button>
+        </div>
+
+        <!-- Restaurant Cards Grid -->
+        <div id="restaurants-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           MODULE 2B: 餐廳詳情頁 (RESTAURANT DETAIL VIEW)
+      ====================================================================== -->
+      <section id="view-restaurant-detail" class="view-section hidden view-animate">
+        <!-- Back Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
+          <button onclick="backFromDetail()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-obsidian-800 border border-obsidian-600 text-xs sm:text-sm font-bold text-ivory-100 hover:border-amberwarm-500 hover:text-amberwarm-300 transition cursor-pointer">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>返回餐廳列表</span>
+          </button>
+          <div class="flex items-center gap-2" id="detail-top-actions">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Detail Content Container -->
+        <div id="restaurant-detail-content" class="space-y-6">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           MODULE 3: 收藏店家 (FAVORITES)
+      ====================================================================== -->
+      <section id="view-favorites" class="view-section hidden view-animate">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amberwarm-500/15 border border-amberwarm-500/30 text-amberwarm-300 text-xs font-bold mb-2">
+              <i data-lucide="heart" class="w-3.5 h-3.5 fill-amberwarm-400"></i>
+              <span>POCKET LIST・我的中原口袋名單</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-editorial font-black text-ivory-100 tracking-tight">收藏店家</h2>
+            <p class="text-sm text-ivory-300 mt-1">把愛吃的愛店收進口袋，隨時一鍵帶入美食轉盤抽選。</p>
+          </div>
+
+          <!-- Toggle Switch: 只看我的收藏 -->
+          <div class="flex items-center gap-3 bg-obsidian-800 px-4 py-2.5 rounded-2xl border border-obsidian-600 self-start sm:self-auto">
+            <span class="text-xs font-bold text-ivory-100">只看我的收藏</span>
+            <button id="fav-only-toggle" onclick="toggleFavOnlyMode()" role="switch" aria-checked="true" class="w-11 h-6 rounded-full bg-amberwarm-500 p-0.5 transition-colors duration-200 flex items-center cursor-pointer">
+              <span id="fav-only-knob" class="w-5 h-5 rounded-full bg-white shadow transform translate-x-5 transition-transform duration-200"></span>
+            </button>
+          </div>
+        </div>
+
+        <div id="favorites-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           MODULE 4: 分享評論 (SHARE REVIEWS)
+      ====================================================================== -->
+      <section id="view-reviews" class="view-section hidden view-animate">
+        <div class="mb-6">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage-500/15 border border-sage-500/30 text-sage-500 text-xs font-bold mb-2">
+            <i data-lucide="pen-line" class="w-3.5 h-3.5"></i>
+            <span>DINING NOTES・真實食記交流</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-editorial font-black text-ivory-100 tracking-tight">分享評論</h2>
+          <p class="text-sm text-ivory-300 mt-1">記錄你在中原周邊的真實用餐體驗，幫同學避雷或推坑隱藏版美食！</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Left: Write Review Form (5 cols) -->
+          <div class="lg:col-span-5 bento-card p-6">
+            <h3 class="text-lg font-extrabold text-ivory-100 flex items-center gap-2 mb-4">
+              <i data-lucide="edit-3" class="w-5 h-5 text-amberwarm-400"></i>
+              <span>寫下這一餐</span>
+            </h3>
+
+            <form id="global-review-form" onsubmit="submitGlobalReview(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-ivory-200 mb-1.5">選擇用餐餐廳 *</label>
+                <select id="review-restaurant-select" onchange="updateReviewDishSuggestions()" required class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm font-medium text-ivory-100 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25">
+                  <!-- Populated by JS -->
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-ivory-200 mb-1.5">你的暱稱</label>
+                <input id="review-author-input" type="text" placeholder="例如：資管系大三生、中原漢堡王" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-ivory-200 mb-1.5">整體評分 *</label>
+                <div class="flex items-center gap-1.5" id="global-star-picker">
+                  <button type="button" data-star="1" onclick="setGlobalRating(1)" class="star-btn p-1.5 rounded-lg hover:bg-obsidian-700 transition">
+                    <i data-lucide="star" class="w-6 h-6 fill-honey-500 text-honey-500"></i>
+                  </button>
+                  <button type="button" data-star="2" onclick="setGlobalRating(2)" class="star-btn p-1.5 rounded-lg hover:bg-obsidian-700 transition">
+                    <i data-lucide="star" class="w-6 h-6 fill-honey-500 text-honey-500"></i>
+                  </button>
+                  <button type="button" data-star="3" onclick="setGlobalRating(3)" class="star-btn p-1.5 rounded-lg hover:bg-obsidian-700 transition">
+                    <i data-lucide="star" class="w-6 h-6 fill-honey-500 text-honey-500"></i>
+                  </button>
+                  <button type="button" data-star="4" onclick="setGlobalRating(4)" class="star-btn p-1.5 rounded-lg hover:bg-obsidian-700 transition">
+                    <i data-lucide="star" class="w-6 h-6 fill-honey-500 text-honey-500"></i>
+                  </button>
+                  <button type="button" data-star="5" onclick="setGlobalRating(5)" class="star-btn p-1.5 rounded-lg hover:bg-obsidian-700 transition">
+                    <i data-lucide="star" class="w-6 h-6 fill-honey-500 text-honey-500"></i>
+                  </button>
+                  <span id="global-rating-label" class="ml-2 text-xs font-bold text-honey-400">5.0 顆星・激推！</span>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-ivory-200 mb-1.5">推薦餐點標籤（可點選或自填）</label>
+                <input id="review-dish-input" type="text" placeholder="例如：經典花生醬牛肉堡" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25 mb-2" />
+                <div id="review-dish-chips" class="flex flex-wrap gap-1.5">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-ivory-200 mb-1.5">用餐心得 *</label>
+                <textarea id="review-comment-input" rows="3" required placeholder="分享餐點口味、份量、出餐速度或環境氛圍..." class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25"></textarea>
+              </div>
+
+              <button type="submit" class="w-full py-3 rounded-xl bg-amberwarm-500 hover:bg-amberwarm-400 active:scale-[0.99] text-white font-bold text-sm shadow-lg shadow-amberwarm-500/25 flex items-center justify-center gap-2 transition cursor-pointer">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>發布食光評論</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Right: Community Feed (Latest 30 Reviews) (7 cols) -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-extrabold text-ivory-100 flex items-center gap-2">
+                <i data-lucide="messages-square" class="w-5 h-5 text-amberwarm-400"></i>
+                <span>大家的最新評論</span>
+                <span class="text-xs font-semibold text-ivory-300">(最新 30 則)</span>
+              </h3>
+            </div>
+
+            <div id="global-reviews-feed" class="space-y-3.5">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           MODULE 5: 新增餐廳 — 智慧建檔模擬器 (ADD RESTAURANT)
+      ====================================================================== -->
+      <section id="view-add" class="view-section hidden view-animate">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amberwarm-500/15 border border-amberwarm-500/30 text-amberwarm-300 text-xs font-bold mb-2">
+              <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
+              <span>SMART PARSER・智慧美食建檔</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-editorial font-black text-ivory-100 tracking-tight">新增中原周邊餐廳</h2>
+            <p class="text-sm text-ivory-300 mt-1">輸入店家資訊或招牌關鍵字，系統將自動配對真實美食攝影、生成菜單與熱量並加入轉盤！</p>
+          </div>
+
+          <button onclick="resetToDefaultData()" class="self-start sm:self-auto px-3.5 py-2 rounded-xl bg-obsidian-800 border border-obsidian-600 text-xs font-bold text-ivory-200 hover:border-red-400/60 hover:text-red-400 transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            <span>重置回預設中原資料</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Left: Smart Parser Form (6 cols) -->
+          <div class="lg:col-span-6 bento-card p-6 relative overflow-hidden">
+            <h3 class="text-lg font-extrabold text-ivory-100 mb-4 flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-5 h-5 text-amberwarm-400"></i>
+              <span>智慧解析並建檔</span>
+            </h3>
+
+            <form id="add-restaurant-form" onsubmit="handleSmartAddRestaurant(event)" class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-ivory-200 mb-1.5">餐廳名稱 *</label>
+                  <input id="add-name" type="text" required oninput="updateAddPreviewCard()" placeholder="例如：中原小巷咖哩" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-ivory-200 mb-1.5">料理類別 *</label>
+                  <select id="add-category" onchange="updateAddPreviewCard()" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25">
+                    <option value="美式漢堡・早午餐拼盤">美式漢堡・早午餐拼盤</option>
+                    <option value="排餐牛排・炙燒鐵板">排餐牛排・炙燒鐵板</option>
+                    <option value="日韓料理・韓式小吃">日韓料理・韓式小吃</option>
+                    <option value="咖哩簡餐・日系咖啡廳">咖哩簡餐・日系咖啡廳</option>
+                    <option value="台式小吃・手工麵食湯包">台式小吃・手工麵食湯包</option>
+                    <option value="甜品飲料・仙草芋圓冰品">甜品飲料・仙草芋圓冰品</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Real-time Photo Match Preview Box -->
+              <div class="p-3 rounded-2xl bg-obsidian-950 border border-obsidian-600 flex items-center gap-3.5">
+                <div class="w-20 h-16 rounded-xl overflow-hidden bg-obsidian-800 shrink-0">
+                  <img
+                    id="add-preview-img"
+                    src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80"
+                    alt="預覽配圖"
+                    onload="this.classList.add('loaded')"
+                    onerror="handleImgError(this, 'western')"
+                    class="food-photo w-full h-full object-cover"
+                  />
+                </div>
+                <div class="min-w-0">
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-amberwarm-400 block">自動匹配主題實拍圖</span>
+                  <p id="add-preview-title" class="text-xs sm:text-sm font-extrabold text-ivory-100 truncate mt-0.5">輸入餐廳名稱即時預覽卡片視覺</p>
+                  <p id="add-preview-sub" class="text-[11px] text-ivory-300 truncate">美式漢堡・早午餐拼盤</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-ivory-200 mb-1.5">店家地址</label>
+                  <input id="add-address" type="text" placeholder="320桃園市中壢區實踐路..." class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-ivory-200 mb-1.5">距中原步行時間</label>
+                  <input id="add-walk" type="text" placeholder="例如：距中原大學正門約 4 分鐘" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-ivory-200 mb-1.5">參考消費區間</label>
+                  <input id="add-price" type="text" placeholder="例如：$130 - $240" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-ivory-200 mb-1.5">Google 地圖或 IG 連結</label>
+                  <input id="add-map-url" type="url" placeholder="https://maps.google.com/..." class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-ivory-200 mb-1.5">招牌餐點關鍵字（以頓號或逗號分隔，系統將自動補齊 5~6 道完整菜單與實拍縮圖）</label>
+                <input id="add-dishes" type="text" placeholder="例如：唐揚雞熟成咖哩、厚切炸豬排飯、溫泉蛋牛丼、焦糖布丁" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-600 text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500 focus:ring-2 focus:ring-amberwarm-500/25" />
+              </div>
+
+              <button id="smart-parse-btn" type="submit" class="w-full py-3.5 rounded-xl bg-amberwarm-500 hover:bg-amberwarm-400 text-white font-bold text-sm shadow-lg shadow-amberwarm-500/25 transition flex items-center justify-center gap-2 cursor-pointer">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>智慧解析並建檔</span>
+              </button>
+            </form>
+
+            <!-- Parsing Overlay Animation -->
+            <div id="parsing-overlay" class="hidden absolute inset-0 bg-obsidian-800/95 backdrop-blur-sm z-20 flex flex-col items-center justify-center p-6 text-center">
+              <div class="w-14 h-14 rounded-2xl bg-amberwarm-500/15 border border-amberwarm-500/35 flex items-center justify-center text-amberwarm-400 mb-4 animate-bounce">
+                <i data-lucide="cpu" class="w-7 h-7"></i>
+              </div>
+              <h4 id="parsing-step-title" class="text-base font-extrabold text-ivory-100">正在解析餐廳地標與營業資訊...</h4>
+              <p id="parsing-step-desc" class="text-xs text-ivory-300 mt-1">自動匹配餐點真實攝影、價格區間與預估熱量 kcal</p>
+              <div class="w-48 h-1.5 bg-obsidian-950 rounded-full overflow-hidden mt-4 border border-obsidian-600">
+                <div id="parsing-progress-bar" class="h-full bg-amberwarm-500 rounded-full transition-all duration-300" style="width: 25%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Managed Restaurants List (6 cols) -->
+          <div class="lg:col-span-6 bento-card p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-extrabold text-ivory-100 flex items-center gap-2">
+                <i data-lucide="database" class="w-5 h-5 text-amberwarm-400"></i>
+                <span>已建檔餐廳管理列表</span>
+              </h3>
+              <span id="managed-count-label" class="text-xs font-bold bg-obsidian-700 text-ivory-200 px-2.5 py-1 rounded-full">共 8 間</span>
+            </div>
+
+            <div id="managed-restaurants-list" class="space-y-2.5 max-h-[540px] overflow-y-auto pr-1">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==================== MOBILE BOTTOM NAVIGATION BAR ==================== -->
+  <nav class="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-obsidian-850/95 backdrop-blur-md border-t border-obsidian-600 px-2 py-1.5 flex items-center justify-around shadow-[0_-6px_24px_rgba(0,0,0,0.65)]">
+    <button data-tab="wheel" onclick="switchTab('wheel')" class="mobile-nav-btn flex flex-col items-center justify-center py-1.5 px-2.5 rounded-xl text-[11px] font-bold transition">
+      <i data-lucide="compass" class="w-5 h-5 mb-0.5"></i>
+      <span>轉盤</span>
+    </button>
+    <button data-tab="restaurants" onclick="switchTab('restaurants')" class="mobile-nav-btn flex flex-col items-center justify-center py-1.5 px-2.5 rounded-xl text-[11px] font-bold transition">
+      <i data-lucide="store" class="w-5 h-5 mb-0.5"></i>
+      <span>餐廳</span>
+    </button>
+    <button data-tab="favorites" onclick="switchTab('favorites')" class="mobile-nav-btn relative flex flex-col items-center justify-center py-1.5 px-2.5 rounded-xl text-[11px] font-bold transition">
+      <i data-lucide="heart" class="w-5 h-5 mb-0.5"></i>
+      <span>收藏</span>
+      <span id="mobile-fav-dot" class="hidden absolute top-1 right-2.5 w-2 h-2 rounded-full bg-amberwarm-500"></span>
+    </button>
+    <button data-tab="reviews" onclick="switchTab('reviews')" class="mobile-nav-btn flex flex-col items-center justify-center py-1.5 px-2.5 rounded-xl text-[11px] font-bold transition">
+      <i data-lucide="message-square-heart" class="w-5 h-5 mb-0.5"></i>
+      <span>評論</span>
+    </button>
+    <button data-tab="add" onclick="switchTab('add')" class="mobile-nav-btn flex flex-col items-center justify-center py-1.5 px-2.5 rounded-xl text-[11px] font-bold transition">
+      <i data-lucide="sparkles" class="w-5 h-5 mb-0.5"></i>
+      <span>新增</span>
+    </button>
+  </nav>
+
+  <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-xs w-full"></div>
+
+  <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
+  <script>
+    // =========================================================================
+    // 0. 100% AUTHENTIC REAL UNSPLASH FOOD PHOTOGRAPHY & REAL-PHOTO FALLBACK ENGINE
+    // =========================================================================
+    const UNIVERSAL_REAL_FOOD_BACKUP = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=85';
+
+    const CATEGORY_PHOTO_BANK = {
+      western: {
+        hero: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1000&q=85',
+        dishes: [
+          'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1615297928064-24977384d0da?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80'
+        ]
+      },
+      steak: {
+        hero: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1000&q=85',
+        dishes: [
+          'https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80'
+        ]
+      },
+      asian: {
+        hero: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?auto=format&fit=crop&w=1000&q=85',
+        dishes: [
+          'https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1635363638580-c2809d049eee?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1583224964978-2257b960c3d3?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80'
+        ]
+      },
+      local: {
+        hero: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1000&q=85',
+        dishes: [
+          'https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1547928576-a4a33237cbc3?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80'
+        ]
+      },
+      dessert: {
+        hero: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=1000&q=85',
+        dishes: [
+          'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=600&q=80'
+        ]
+      }
+    };
+
+    // Real-photo-only multi-tier error handler (Zero cartoon or synthetic illustrations!)
+    function handleImgError(imgEl, group = 'western') {
+      const step = Number(imgEl.dataset.errStep || 0);
+      if (step === 0) {
+        imgEl.dataset.errStep = '1';
+        const fallbackPool = CATEGORY_PHOTO_BANK[group] || CATEGORY_PHOTO_BANK.western;
+        imgEl.src = fallbackPool.hero;
+      } else if (step === 1) {
+        imgEl.dataset.errStep = '2';
+        imgEl.onerror = null;
+        imgEl.src = UNIVERSAL_REAL_FOOD_BACKUP;
+      }
+    }
+
+    // =========================================================================
+    // 1. INITIAL DATA (中原大學周邊 8 間真實餐廳，100% 真實食物攝影配圖)
+    // =========================================================================
+    const DEFAULT_RESTAURANTS = [
+      {
+        id: 'aniki-zhongli',
+        name: '阿尼基美式餐廳 中壢店',
+        featured: true,
+        category: '美式漢堡・早午餐拼盤',
+        filterGroup: 'western',
+        heroPhoto: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1000&q=85',
+        galleryCaption: '實拍厚切雙層起司牛肉漢堡、金黃美式脆薯與手作奶昔',
+        address: '320桃園市中壢區大仁二街13號',
+        phone: '0966-787-543',
+        priceRange: '$220 - $380',
+        walkTime: '距中原大學正門約 3 分鐘',
+        hours: '週一至週日 11:30 - 20:30（最後出餐時間 19:30）',
+        prepSpeed: '中等（現點現做約 15-20 分鐘）',
+        signatureDishes: ['經典花生醬牛肉堡', '雙層培根起司堡', '水牛城辣雞翅', '美式脆薯拼盤', '照燒雞腿排堡', '奧利奧香草奶昔'],
+        mapUrl: 'https://www.google.com/maps/place/%E9%98%BF%E5%B0%BC%E5%9F%BA%E7%BE%8E%E5%BC%8F%E9%A4%90%E5%BB%B3+%E4%B8%AD%E5%A3%A2%E5%BA%97%EF%BC%88%E6%9C%80%E5%BE%8C%E5%87%BA%E9%A4%90%E6%99%82%E9%96%9319:30/@24.9555307,121.1601691,12z/data=!4m7!3m6!1s0x34682214e297e491:0x274fceb79c7999d!8m2!3d24.9546169!4d121.242425',
+        website: 'https://instagram.com/aniki.cl',
+        isCustom: false,
+        menu: [
+          {
+            name: '經典花生醬牛肉堡',
+            price: 250,
+            kcal: 820,
+            tag: '鎮店招牌',
+            photo: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '雙層培根起司堡',
+            price: 290,
+            kcal: 940,
+            tag: '肉食首選',
+            photo: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '水牛城辣雞翅',
+            price: 180,
+            kcal: 540,
+            tag: '聚餐必點',
+            photo: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '美式脆薯拼盤',
+            price: 150,
+            kcal: 610,
+            tag: '邪惡小點',
+            photo: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '照燒雞腿排堡',
+            price: 260,
+            kcal: 760,
+            tag: '人氣推薦',
+            photo: 'https://images.unsplash.com/photo-1615297928064-24977384d0da?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '奧利奧香草奶昔',
+            price: 140,
+            kcal: 430,
+            tag: '經典飲品',
+            photo: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80'
+          }
+        ]
+      },
+      {
+        id: 'xianghou-steak',
+        name: '饗厚牛排 中壢店',
+        featured: false,
+        category: '排餐牛排・炙燒鐵板',
+        filterGroup: 'steak',
+        heroPhoto: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1000&q=85',
+        galleryCaption: '實拍鐵板炙燒厚切肋眼牛排佐濃郁黑胡椒醬與自助吧',
+        address: '320桃園市中壢區中山東路二段186號',
+        phone: '03-456-8899',
+        priceRange: '$290 - $520',
+        walkTime: '距中原大學正門約 6 分鐘',
+        hours: '週一至週日 11:00 - 21:30',
+        prepSpeed: '中等（鐵板現煎約 12-18 分鐘）',
+        signatureDishes: ['招牌岩燒沙朗牛排', '美國頂級肋眼牛排', '香煎脆皮雞腿排', '蒜香奶油餐包與濃湯', '雙拼海陸總匯排餐'],
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=饗厚牛排+中壢店',
+        website: '',
+        isCustom: false,
+        menu: [
+          {
+            name: '招牌岩燒沙朗牛排',
+            price: 340,
+            kcal: 890,
+            tag: '鎮店厚切',
+            photo: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '美國頂級肋眼牛排',
+            price: 450,
+            kcal: 920,
+            tag: '油花豐富',
+            photo: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '香煎脆皮雞腿排',
+            price: 290,
+            kcal: 780,
+            tag: '高 CP 值',
+            photo: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '蒜香奶油餐包與濃湯',
+            price: 90,
+            kcal: 410,
+            tag: '經典附餐',
+            photo: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '雙拼海陸總匯排餐',
+            price: 480,
+            kcal: 1050,
+            tag: '大胃王首選',
+            photo: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80'
+          }
+        ]
+      },
+      {
+        id: 'chameleon-korean',
+        name: '變色龍韓式小吃',
+        featured: false,
+        category: '日韓料理・韓式小吃',
+        filterGroup: 'asian',
+        heroPhoto: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?auto=format&fit=crop&w=1000&q=85',
+        galleryCaption: '實拍滋滋作響韓式石鍋拌飯、部隊鍋與辣炒年糕',
+        address: '320桃園市中壢區實踐路225-3號',
+        phone: '03-438-5210',
+        priceRange: '$130 - $250',
+        walkTime: '距中原大學正門約 4 分鐘',
+        hours: '週二至週日 11:30 - 14:30, 17:00 - 20:30（週一公休）',
+        prepSpeed: '快速（約 8-12 分鐘）',
+        signatureDishes: ['招牌石鍋拌飯', '韓式部隊鍋', '辣炒年糕起司盤', '韓式銅盤烤肉飯', '泡菜豆腐海鮮鍋'],
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=中原大學+變色龍韓式小吃',
+        website: '',
+        isCustom: false,
+        menu: [
+          {
+            name: '招牌石鍋拌飯',
+            price: 160,
+            kcal: 720,
+            tag: '鍋巴焦香',
+            photo: 'https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '韓式部隊鍋',
+            price: 195,
+            kcal: 810,
+            tag: '濃郁起司',
+            photo: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '辣炒年糕起司盤',
+            price: 140,
+            kcal: 610,
+            tag: '學生最愛',
+            photo: 'https://images.unsplash.com/photo-1635363638580-c2809d049eee?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '韓式銅盤烤肉飯',
+            price: 175,
+            kcal: 740,
+            tag: '下飯首選',
+            photo: 'https://images.unsplash.com/photo-1583224964978-2257b960c3d3?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '泡菜豆腐海鮮鍋',
+            price: 165,
+            kcal: 540,
+            tag: '暖胃必點',
+            photo: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80'
+          }
+        ]
+      },
+      {
+        id: 'laojiexi-noodles',
+        name: '老街溪麵疙瘩',
+        featured: false,
+        category: '台式麵食・手工湯麵',
+        filterGroup: 'local',
+        heroPhoto: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1000&q=85',
+        galleryCaption: '實拍熱騰騰現揪手工麵疙瘩、鮮甜海鮮與青菜碗公湯麵',
+        address: '320桃園市中壢區大仁五街42號',
+        phone: '03-465-3318',
+        priceRange: '$85 - $145',
+        walkTime: '距中原大學正門約 3 分鐘',
+        hours: '週一至週六 11:00 - 20:00（週日公休）',
+        prepSpeed: '快速（現煮約 6-10 分鐘）',
+        signatureDishes: ['招牌綜合海鮮麵疙瘩', '肉絲青菜手工麵疙瘩', '番茄牛肉麵疙瘩', '古早味燙青菜與滷蛋'],
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=中原大學+老街溪麵疙瘩',
+        website: '',
+        isCustom: false,
+        menu: [
+          {
+            name: '招牌綜合海鮮麵疙瘩',
+            price: 120,
+            kcal: 580,
+            tag: '湯頭鮮甜',
+            photo: 'https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '肉絲青菜手工麵疙瘩',
+            price: 90,
+            kcal: 490,
+            tag: '銅板飽足',
+            photo: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '番茄牛肉麵疙瘩',
+            price: 140,
+            kcal: 640,
+            tag: '濃郁酸甜',
+            photo: 'https://images.unsplash.com/photo-1547928576-a4a33237cbc3?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '古早味燙青菜與滷蛋',
+            price: 55,
+            kcal: 220,
+            tag: '均衡加點',
+            photo: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80'
+          }
+        ]
+      },
+      {
+        id: 'yuguanyuan-bao',
+        name: '御冠園鮮肉湯包專賣店',
+        featured: false,
+        category: '台式小吃・現蒸鮮肉湯包',
+        filterGroup: 'local',
+        heroPhoto: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1000&q=85',
+        galleryCaption: '實拍竹籠現桿現蒸爆汁鮮肉湯包、冰花煎餃與古早味豆漿',
+        address: '320桃園市中壢區實踐路88號',
+        phone: '0932-282-335',
+        priceRange: '$65 - $130',
+        walkTime: '距中原大學正門約 2 分鐘',
+        hours: '週一至週日 06:00 - 23:30',
+        prepSpeed: '極快（現蒸出爐約 3-5 分鐘）',
+        signatureDishes: ['現桿爆汁鮮肉湯包', '冰花脆皮煎餃', '酸辣湯', '冰鎮古早味豆漿'],
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=御冠園鮮肉湯包專賣店+中壢實踐路',
+        website: '',
+        isCustom: false,
+        menu: [
+          {
+            name: '現桿爆汁鮮肉湯包',
+            price: 70,
+            kcal: 520,
+            tag: '排隊必吃',
+            photo: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '冰花脆皮煎餃',
+            price: 75,
+            kcal: 560,
+            tag: '外酥內多汁',
+            photo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '酸辣湯',
+            price: 35,
+            kcal: 190,
+            tag: '湯包絕配',
+            photo: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '冰鎮古早味豆漿',
+            price: 25,
+            kcal: 140,
+            tag: '清爽解膩',
+            photo: 'https://images.unsplash.com/photo-1556881286-fc6915169721?auto=format&fit=crop&w=600&q=80'
+          }
+        ]
+      },
+      {
+        id: 'donald-steak',
+        name: '唐老鴨牛排館',
+        featured: false,
+        category: '排餐牛排・經典台式鐵板',
+        filterGroup: 'steak',
+        heroPhoto: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=1000&q=85',
+        galleryCaption: '實拍中原夜市經典台式鐵板牛排、香煎雞腿排與濃湯',
+        address: '320桃園市中壢區實踐路118號',
+        phone: '03-436-2190',
+        priceRange: '$170 - $320',
+        walkTime: '距中原大學正門約 3 分鐘',
+        hours: '週一至週日 11:30 - 14:30, 17:00 - 22:00',
+        prepSpeed: '快速（約 10-12 分鐘）',
+        signatureDishes: ['經典黑胡椒牛排（附鐵板麵）', '蘑菇醬厚切豬排', '黃金酥脆雞腿排', '無限暢飲紅茶與玉米濃湯'],
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=中原大學+唐老鴨牛排館',
+        website: '',
+        isCustom: false,
+        menu: [
+          {
+            name: '經典黑胡椒牛排（附鐵板麵）',
+            price: 180,
+            kcal: 780,
+            tag: '學生經典',
+            photo: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '蘑菇醬厚切豬排',
+            price: 170,
+            kcal: 710,
+            tag: '平價首選',
+            photo: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '黃金酥脆雞腿排',
+            price: 180,
+            kcal: 740,
+            tag: '外酥裡嫩',
+            photo: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '無限暢飲紅茶與玉米濃湯',
+            price: 0,
+            kcal: 240,
+            tag: '內用免費續',
+            photo: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80'
+          }
+        ]
+      },
+      {
+        id: 'pink-frog-grassjelly',
+        name: '粉紅蛙仙草奶凍之家',
+        featured: false,
+        category: '甜品飲料・仙草芋圓冰品',
+        filterGroup: 'dessert',
+        heroPhoto: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=1000&q=85',
+        galleryCaption: '實拍滑嫩手熬仙草凍、Q彈手工雙圓與紅豆牛奶冰',
+        address: '320桃園市中壢區實踐路91號',
+        phone: '03-436-9955',
+        priceRange: '$45 - $85',
+        walkTime: '距中原大學正門約 2 分鐘',
+        hours: '週一至週日 12:00 - 23:00',
+        prepSpeed: '極快（約 2-4 分鐘）',
+        signatureDishes: ['招牌仙草奶凍綜合冰', '手工雙圓（芋圓地瓜圓）嫩仙草', '紅豆牛奶挫冰', '冬季熱燒仙草綜合'],
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=粉紅蛙仙草奶凍之家+中壢實踐路',
+        website: '',
+        isCustom: false,
+        menu: [
+          {
+            name: '招牌仙草奶凍綜合冰',
+            price: 60,
+            kcal: 360,
+            tag: '鎮店冠軍',
+            photo: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '手工雙圓（芋圓地瓜圓）嫩仙草',
+            price: 65,
+            kcal: 390,
+            tag: 'Q彈飽滿',
+            photo: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '紅豆牛奶挫冰',
+            price: 65,
+            kcal: 410,
+            tag: '消暑聖品',
+            photo: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '冬季熱燒仙草綜合',
+            price: 65,
+            kcal: 380,
+            tag: '暖手必點',
+            photo: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=600&q=80'
+          }
+        ]
+      },
+      {
+        id: 'howcup-curry-cafe',
+        name: '好咖 Howcup CURRY CAFE',
+        featured: false,
+        category: '咖哩簡餐・日系咖啡廳',
+        filterGroup: 'asian',
+        heroPhoto: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=1000&q=85',
+        galleryCaption: '實拍日系熟成濃郁咖哩飯、滑嫩歐姆蛋炸豬排與宇治抹茶千層',
+        address: '320桃園市中壢區中北路165巷1號',
+        phone: '03-436-2188',
+        priceRange: '$220 - $360',
+        walkTime: '距中原大學正門約 4 分鐘',
+        hours: '週一至週日 11:30 - 21:00',
+        prepSpeed: '中等（現點現做約 15 分鐘）',
+        signatureDishes: ['歐姆蛋炸豬排濃郁咖哩飯', '唐揚炸雞香料咖哩', '宇治抹茶千層蛋糕', '焦糖海鹽拿鐵'],
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=好咖+Howcup+CURRY+CAFE+中壢',
+        website: 'https://instagram.com/howcup_curry_cafe',
+        isCustom: false,
+        menu: [
+          {
+            name: '歐姆蛋炸豬排濃郁咖哩飯',
+            price: 260,
+            kcal: 860,
+            tag: '人氣 Top 1',
+            photo: 'https://images.unsplash.com/photo-1574484284002-952d92456975?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '唐揚炸雞香料咖哩',
+            price: 245,
+            kcal: 790,
+            tag: '濃郁微辣',
+            photo: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '宇治抹茶千層蛋糕',
+            price: 150,
+            kcal: 360,
+            tag: '甜點必吃',
+            photo: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80'
+          },
+          {
+            name: '焦糖海鹽拿鐵',
+            price: 130,
+            kcal: 180,
+            tag: '職人咖啡',
+            photo: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80'
+          }
+        ]
+      }
+    ];
+
+    const DEFAULT_REVIEWS = [
+      {
+        id: 'rev-1',
+        restaurantId: 'aniki-zhongli',
+        author: '中原漢堡愛好者',
+        rating: 5,
+        dish: '經典花生醬牛肉堡',
+        comment: '花生醬超級濃郁而且吃得到顆粒！漢堡排厚實多汁，美式脆薯拼盤也是每次跟室友來必點，記得最後出餐是 19:30 別太晚來～',
+        date: '2026-11-18'
+      },
+      {
+        id: 'rev-2',
+        restaurantId: 'aniki-zhongli',
+        author: '電機系小陳',
+        rating: 5,
+        dish: '雙層培根起司堡',
+        comment: '大仁二街走進來馬上就到，雙層肉排搭配香脆培根和奧利奧香草奶昔超罪惡，環境很有美式復古感。',
+        date: '2026-11-15'
+      },
+      {
+        id: 'rev-3',
+        restaurantId: 'howcup-curry-cafe',
+        author: '設計系林同學',
+        rating: 5,
+        dish: '厚切炸豬排歐姆蛋咖哩飯',
+        comment: '滑嫩歐姆蛋配濃郁咖哩醬真的無敵，炸豬排厚實不乾柴，吃完主餐再點一塊抹茶生乳捲超幸福！',
+        date: '2026-11-14'
+      },
+      {
+        id: 'rev-4',
+        restaurantId: 'yuguanyuan-bao',
+        author: '實踐路美食家',
+        rating: 5,
+        dish: '現蒸招牌鮮肉湯包（一籠7顆）',
+        comment: '中原正門出來兩分鐘就到，現蒸湯包皮薄餡多還會爆汁，配上薑絲跟辣油從早吃到宵夜都適合。',
+        date: '2026-11-12'
+      },
+      {
+        id: 'rev-5',
+        restaurantId: 'xianghou-steak',
+        author: '機械系大胃王',
+        rating: 5,
+        dish: '特級厚切沙朗牛排',
+        comment: '肉質很有厚度，鐵板滋滋作響加上黑胡椒醬超下飯，自助吧湯品飲料也很齊全，社團聚餐首選！',
+        date: '2026-11-10'
+      },
+      {
+        id: 'rev-6',
+        restaurantId: 'chameleon-korean',
+        author: '商設系學姊',
+        rating: 5,
+        dish: '招牌牛肉石鍋拌飯',
+        comment: '石鍋鍋巴超香脆，辣炒年糕起司盤牽絲很療癒，價格對學生非常友善。',
+        date: '2026-11-08'
+      },
+      {
+        id: 'rev-7',
+        restaurantId: 'laojiexi-noodles',
+        author: '資管系小周',
+        rating: 5,
+        dish: '招牌綜合海鮮麵疙瘩',
+        comment: '手工現揪的麵疙瘩非常Q彈有嚼勁，湯頭清甜料又多，天冷來一碗超暖胃。',
+        date: '2026-11-06'
+      },
+      {
+        id: 'rev-8',
+        restaurantId: 'pink-frog-grassjelly',
+        author: '甜品控代表',
+        rating: 5,
+        dish: '招牌綜合仙草奶凍（芋圓＋珍珠）',
+        comment: '吃完正餐一定要來一杯粉紅蛙！仙草滑嫩回甘，芋圓跟珍珠給得超大方。',
+        date: '2026-11-04'
+      }
+    ];
+
+    // =========================================================================
+    // 2. STATE MANAGEMENT (localStorage persistence - v3 Dark Real Photo Edition)
+    // =========================================================================
+    const STORAGE_KEYS = {
+      RESTAURANTS: 'cycu_food_daily_restaurants_v3_dark_real',
+      FAVORITES: 'cycu_food_daily_favorites_v3_dark_real',
+      REVIEWS: 'cycu_food_daily_reviews_v3_dark_real',
+      WHEEL_SELECTED: 'cycu_food_daily_wheel_selected_v3_dark_real'
+    };
+
+    let state = {
+      restaurants: [],
+      favorites: [],
+      reviews: [],
+      wheelSelectedIds: [],
+      activeTab: 'wheel',
+      previousTabBeforeDetail: 'restaurants',
+      currentDetailId: 'aniki-zhongli',
+      activeDetailPhotoUrl: '',
+      activeDetailPhotoCaption: '',
+      categoryFilter: 'all',
+      favOnlyMode: true,
+      globalRating: 5,
+      wheelRotation: 0,
+      isSpinning: false,
+      lastWinnerId: 'aniki-zhongli'
+    };
+
+    function loadState() {
+      try {
+        const savedRestaurants = localStorage.getItem(STORAGE_KEYS.RESTAURANTS);
+        const savedFavorites = localStorage.getItem(STORAGE_KEYS.FAVORITES);
+        const savedReviews = localStorage.getItem(STORAGE_KEYS.REVIEWS);
+        const savedWheel = localStorage.getItem(STORAGE_KEYS.WHEEL_SELECTED);
+
+        state.restaurants = savedRestaurants ? JSON.parse(savedRestaurants) : JSON.parse(JSON.stringify(DEFAULT_RESTAURANTS));
+        // 確保「阿尼基美式餐廳 中壢店」永遠排在第一位
+        const anikiIdx = state.restaurants.findIndex(r => r.id === 'aniki-zhongli');
+        if (anikiIdx > 0) {
+          const [aniki] = state.restaurants.splice(anikiIdx, 1);
+          state.restaurants.unshift(aniki);
+        }
+
+        // 預設先將「阿尼基美式餐廳 中壢店」加入收藏示範
+        state.favorites = savedFavorites ? JSON.parse(savedFavorites) : ['aniki-zhongli'];
+        state.reviews = savedReviews ? JSON.parse(savedReviews) : JSON.parse(JSON.stringify(DEFAULT_REVIEWS));
+        state.wheelSelectedIds = savedWheel
+          ? JSON.parse(savedWheel).filter(id => state.restaurants.some(r => r.id === id))
+          : state.restaurants.map(r => r.id);
+      } catch (e) {
+        console.error('Failed to load localStorage:', e);
+        state.restaurants = JSON.parse(JSON.stringify(DEFAULT_RESTAURANTS));
+        state.favorites = ['aniki-zhongli'];
+        state.reviews = JSON.parse(JSON.stringify(DEFAULT_REVIEWS));
+        state.wheelSelectedIds = state.restaurants.map(r => r.id);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.RESTAURANTS, JSON.stringify(state.restaurants));
+        localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(state.favorites));
+        localStorage.setItem(STORAGE_KEYS.REVIEWS, JSON.stringify(state.reviews));
+        localStorage.setItem(STORAGE_KEYS.WHEEL_SELECTED, JSON.stringify(state.wheelSelectedIds));
+      } catch (e) {
+        console.error('Failed to save localStorage:', e);
+      }
+      updateGlobalBadges();
+    }
+
+    // =========================================================================
+    // 3. HELPER FUNCTIONS & TOASTS
+    // =========================================================================
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const iconName = type === 'success' ? 'check-circle-2' : (type === 'heart' ? 'heart' : 'info');
+      const accentClass = type === 'heart'
+        ? 'border-amberwarm-500/60 bg-obsidian-800 text-ivory-100'
+        : 'border-obsidian-500 bg-obsidian-850 text-ivory-100';
+
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-2xl border text-xs sm:text-sm font-bold transform transition-all duration-300 translate-y-2 opacity-0 ${accentClass}`;
+      toast.innerHTML = `
+        <i data-lucide="${iconName}" class="w-4 h-4 shrink-0 ${type === 'heart' ? 'text-amberwarm-400 fill-amberwarm-400' : 'text-amberwarm-400'}"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons({ root: toast });
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
+    }
+
+    function getRestaurantRating(restaurantId) {
+      const list = state.reviews.filter(r => r.restaurantId === restaurantId);
+      if (list.length === 0) return { avg: '4.8', count: 0 };
+      const sum = list.reduce((acc, r) => acc + Number(r.rating), 0);
+      return {
+        avg: (sum / list.length).toFixed(1),
+        count: list.length
+      };
+    }
+
+    function updateGlobalBadges() {
+      const countBadge = document.getElementById('sidebar-count-badge');
+      const favCount = document.getElementById('nav-fav-count');
+      const revCount = document.getElementById('nav-review-count');
+      const mobileFavDot = document.getElementById('mobile-fav-dot');
+
+      if (countBadge) countBadge.textContent = `${state.restaurants.length} 間精選`;
+      if (favCount) favCount.textContent = state.favorites.length;
+      if (revCount) revCount.textContent = state.reviews.length;
+      if (mobileFavDot) {
+        mobileFavDot.classList.toggle('hidden', state.favorites.length === 0);
+      }
+    }
+
+    // =========================================================================
+    // 4. NAVIGATION & VIEW SWITCHING
+    // =========================================================================
+    function switchTab(tabName) {
+      state.activeTab = tabName;
+
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+
+      const target = document.getElementById(`view-${tabName}`);
+      if (target) {
+        target.classList.remove('hidden');
+        target.classList.remove('view-animate');
+        void target.offsetWidth;
+        target.classList.add('view-animate');
+      }
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const isCurrent = btn.dataset.tab === tabName;
+        if (isCurrent) {
+          btn.className = 'nav-btn w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-sm font-bold bg-amberwarm-500 text-white shadow-lg shadow-amberwarm-500/25 transition-all cursor-pointer';
+        } else {
+          btn.className = 'nav-btn w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-sm font-semibold text-ivory-200 hover:bg-obsidian-800 hover:text-ivory-100 transition-all cursor-pointer';
+        }
+      });
+
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        const isCurrent = btn.dataset.tab === tabName;
+        if (isCurrent) {
+          btn.className = 'mobile-nav-btn flex flex-col items-center justify-center py-1.5 px-2.5 rounded-xl text-[11px] font-extrabold text-amberwarm-400 bg-amberwarm-500/15 transition';
+        } else {
+          btn.className = 'mobile-nav-btn flex flex-col items-center justify-center py-1.5 px-2.5 rounded-xl text-[11px] font-semibold text-ivory-300 hover:text-ivory-100 transition';
+        }
+      });
+
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        const isCurrent = btn.dataset.tab === tabName;
+        if (isCurrent) {
+          btn.className = 'mobile-nav-btn flex flex-col items-center justify-center py-1.5 px-2.5 rounded-xl text-[11px] font-extrabold text-caramel-600 bg-caramel-50 transition';
+        } else {
+          btn.className = 'mobile-nav-btn flex flex-col items-center justify-center py-1.5 px-2.5 rounded-xl text-[11px] font-semibold text-espresso-600 hover:text-espresso-900 transition';
+        }
+      });
+
+      if (tabName === 'wheel') {
+        renderWheelChecklist();
+        drawWheel();
+      } else if (tabName === 'restaurants') {
+        renderRestaurantsList();
+      } else if (tabName === 'favorites') {
+        renderFavoritesView();
+      } else if (tabName === 'reviews') {
+        renderGlobalReviewsView();
+      } else if (tabName === 'add') {
+        renderManagedRestaurantsList();
+        updateAddPreviewCard();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // 5. MODULE 1: INTERACTIVE DARK GOURMET FOOD WHEEL (Canvas + Sound & Confetti)
+    // =========================================================================
+    const WHEEL_PALETTE = [
+      { bg: '#E87A35', text: '#FFFFFF' }, // Warm Amber Terracotta
+      { bg: '#29231F', text: '#F5F0EB' }, // Smoked Charcoal
+      { bg: '#B85024', text: '#FFFFFF' }, // Deep Roasted Rust
+      { bg: '#D99B26', text: '#12100E' }, // Golden Honey
+      { bg: '#38302A', text: '#F5F0EB' }, // Espresso Timber
+      { bg: '#7A3B22', text: '#F5F0EB' }, // Mahogany Spice
+      { bg: '#C9642A', text: '#FFFFFF' }, // Burnt Caramel
+      { bg: '#4A3F37', text: '#F5F0EB' }  // Warm Walnut
+    ];
+
+    let audioCtx = null;
+    function playWheelTick(pitch = 520) {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(pitch, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.045);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.045);
+      } catch (e) {}
+    }
+
+    function getActiveWheelRestaurants() {
+      return state.restaurants.filter(r => state.wheelSelectedIds.includes(r.id));
+    }
+
+    function drawWheel() {
+      const canvas = document.getElementById('food-wheel-canvas');
+      if (!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const size = Math.max(rect.width || 340, 260);
+      canvas.width = size * dpr;
+      canvas.height = size * dpr;
+
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      const cx = size / 2;
+      const cy = size / 2;
+      const radius = size / 2 - 4;
+      const items = getActiveWheelRestaurants();
+
+      ctx.clearRect(0, 0, size, size);
+
+      if (items.length === 0) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#1C1917';
+        ctx.fill();
+        ctx.fillStyle = '#968B80';
+        ctx.font = 'bold 14px "Noto Sans TC", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('請至少勾選 1 間餐廳', cx, cy - 55);
+        return;
+      }
+
+      const sliceAngle = (Math.PI * 2) / items.length;
+      const startOffset = -Math.PI / 2 + state.wheelRotation;
+
+      items.forEach((item, idx) => {
+        const startA = startOffset + idx * sliceAngle;
+        const endA = startA + sliceAngle;
+        const color = WHEEL_PALETTE[idx % WHEEL_PALETTE.length];
+
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, startA, endA);
+        ctx.closePath();
+        ctx.fillStyle = color.bg;
+        ctx.fill();
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(18, 16, 14, 0.85)';
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(startA + sliceAngle / 2);
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = color.text;
+
+        const fontSize = items.length > 8 ? 11 : 12.5;
+        ctx.font = `700 ${fontSize}px "Noto Sans TC", sans-serif`;
+
+        let displayName = item.name.replace(' 中壢店', '').replace('專賣店', '').replace(' CURRY CAFE', '');
+        if (displayName.length > 8) displayName = displayName.slice(0, 8) + '…';
+
+        ctx.fillText(displayName, radius - 18, 0);
+        ctx.restore();
+      });
+    }
+
+    function spinWheel() {
+      if (state.isSpinning) return;
+      const items = getActiveWheelRestaurants();
+      if (items.length === 0) {
+        showToast('請先在右側勾選至少 1 間參與抽選的餐廳！', 'info');
+        return;
+      }
+
+      state.isSpinning = true;
+      const pointer = document.getElementById('wheel-pointer');
+      const spinBtn = document.getElementById('spin-btn');
+      pointer.classList.add('pointer-ticking');
+      spinBtn.classList.add('opacity-90');
+
+      const extraSpins = 5 + Math.random() * 4;
+      const targetDelta = extraSpins * Math.PI * 2 + Math.random() * Math.PI * 2;
+      const startRotation = state.wheelRotation;
+      const duration = 3800;
+      const startTime = performance.now();
+
+      const sliceAngle = (Math.PI * 2) / items.length;
+      let lastTickIndex = -1;
+
+      function animate(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        state.wheelRotation = startRotation + targetDelta * easeOut;
+
+        const normalizedAngle = ((-state.wheelRotation) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+        const currentIndex = Math.floor(normalizedAngle / sliceAngle) % items.length;
+
+        if (currentIndex !== lastTickIndex) {
+          lastTickIndex = currentIndex;
+          playWheelTick(440 + (1 - progress) * 220);
+        }
+
+        drawWheel();
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          state.isSpinning = false;
+          pointer.classList.remove('pointer-ticking');
+          spinBtn.classList.remove('opacity-90');
+
+          const winner = items[currentIndex];
+          state.lastWinnerId = winner.id;
+          updateWheelResultCard(winner, true);
+
+          if (typeof confetti === 'function') {
+            confetti({
+              particleCount: 70,
+              spread: 65,
+              origin: { y: 0.55 },
+              colors: ['#E87A35', '#F5B041', '#F5F0EB', '#6B9966', '#B85024']
+            });
+          }
+          showToast(`🎉 抽中「${winner.name}」！`);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function updateWheelResultCard(restaurant, isFreshWin = false) {
+      if (!restaurant) return;
+      const photoEl = document.getElementById('result-photo');
+      if (photoEl) {
+        photoEl.classList.remove('loaded');
+        photoEl.dataset.errStep = '0';
+        photoEl.alt = restaurant.name;
+        photoEl.onerror = () => handleImgError(photoEl, restaurant.filterGroup);
+        photoEl.src = restaurant.heroPhoto;
+      }
+
+      document.getElementById('result-badge-label').textContent = isFreshWin
+        ? '🎉 命運之選・就吃這一家！'
+        : '今日主廚推薦・預設主打';
+      document.getElementById('result-walk-time').innerHTML = `
+        <i data-lucide="footprints" class="w-3.5 h-3.5 text-amberwarm-400"></i>
+        <span>${restaurant.walkTime.replace('距中原大學', '')}</span>
+      `;
+      document.getElementById('result-name').textContent = restaurant.name;
+      document.getElementById('result-category').textContent = `${restaurant.category} ｜ 參考消費 ${restaurant.priceRange}`;
+
+      const dishesEl = document.getElementById('result-dishes');
+      dishesEl.innerHTML = restaurant.signatureDishes.slice(0, 5).map(dish => `
+        <span class="px-2.5 py-1 rounded-lg bg-obsidian-950 border border-obsidian-600 text-xs font-semibold text-ivory-200">
+          ${dish}
+        </span>
+      `).join('');
+
+      document.getElementById('result-detail-btn').setAttribute('onclick', `openRestaurantDetail('${restaurant.id}')`);
+      document.getElementById('result-map-btn').setAttribute('href', restaurant.mapUrl);
+      lucide.createIcons();
+    }
+
+    function renderWheelChecklist() {
+      const container = document.getElementById('wheel-checklist');
+      const countEl = document.getElementById('wheel-active-count');
+      if (!container) return;
+
+      const activeItems = getActiveWheelRestaurants();
+      if (countEl) countEl.textContent = activeItems.length;
+
+      container.innerHTML = state.restaurants.map((r, idx) => {
+        const checked = state.wheelSelectedIds.includes(r.id);
+        const dotColor = WHEEL_PALETTE[idx % WHEEL_PALETTE.length].bg;
+        return `
+          <label class="flex items-center justify-between p-2.5 rounded-xl border ${checked ? 'bg-obsidian-750 border-amberwarm-500/40' : 'bg-obsidian-950/60 border-obsidian-600 opacity-55'} cursor-pointer hover:border-amberwarm-500 transition">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleWheelCandidate('${r.id}')" class="w-4 h-4 accent-amberwarm-500 rounded cursor-pointer" />
+              <span class="w-2.5 h-2.5 rounded-full shrink-0 border border-white/20" style="background:${dotColor}"></span>
+              <span class="text-xs sm:text-sm font-bold text-ivory-100 truncate">${r.name}</span>
+            </div>
+            <span class="text-[11px] font-medium text-ivory-300 shrink-0 ml-2">${r.priceRange}</span>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function toggleWheelCandidate(id) {
+      if (state.wheelSelectedIds.includes(id)) {
+        state.wheelSelectedIds = state.wheelSelectedIds.filter(item => item !== id);
+      } else {
+        state.wheelSelectedIds.push(id);
+      }
+      saveState();
+      renderWheelChecklist();
+      drawWheel();
+    }
+
+    function selectAllWheel(selectAll) {
+      state.wheelSelectedIds = selectAll ? state.restaurants.map(r => r.id) : [];
+      saveState();
+      renderWheelChecklist();
+      drawWheel();
+      showToast(selectAll ? '已全選所有餐廳加入轉盤' : '已取消全選');
+    }
+
+    function selectFavoritesForWheel() {
+      if (state.favorites.length === 0) {
+        showToast('你目前還沒有收藏任何店家喔！', 'info');
+        return;
+      }
+      state.wheelSelectedIds = [...state.favorites];
+      saveState();
+      renderWheelChecklist();
+      drawWheel();
+      showToast(`已篩選 ${state.favorites.length} 間收藏店家至轉盤`);
+    }
+
+    // =========================================================================
+    // 6. MODULE 2: RESTAURANTS LIST & DETAIL VIEW (WITH GALLERY SWITCHER)
+    // =========================================================================
+    function setCategoryFilter(cat) {
+      state.categoryFilter = cat;
+      document.querySelectorAll('.cat-chip').forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.className = 'cat-chip px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap bg-amberwarm-500 text-white shadow-sm cursor-pointer';
+        } else {
+          btn.className = 'cat-chip px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap bg-obsidian-800 text-ivory-200 border border-obsidian-600 hover:border-amberwarm-500 cursor-pointer';
+        }
+      });
+      renderRestaurantsList();
+    }
+
+    function toggleFavorite(id, event) {
+      if (event) event.stopPropagation();
+      const idx = state.favorites.indexOf(id);
+      const restaurant = state.restaurants.find(r => r.id === id);
+      if (idx > -1) {
+        state.favorites.splice(idx, 1);
+        showToast(`已將「${restaurant?.name}」移出收藏`, 'info');
+      } else {
+        state.favorites.push(id);
+        showToast(`已將「${restaurant?.name}」加入收藏`, 'heart');
+      }
+      saveState();
+
+      if (state.activeTab === 'restaurants') renderRestaurantsList();
+      if (state.activeTab === 'favorites') renderFavoritesView();
+      if (state.activeTab === 'restaurant-detail') openRestaurantDetail(id, true);
+    }
+
+    function buildRestaurantCardHTML(r) {
+      const isFav = state.favorites.includes(r.id);
+      const ratingInfo = getRestaurantRating(r.id);
+
+      return `
+        <article onclick="openRestaurantDetail('${r.id}')" class="bento-card bento-card-hover overflow-hidden flex flex-col justify-between cursor-pointer relative group">
+          <!-- Real Food Photography Cover -->
+          <div class="relative h-48 w-full bg-obsidian-900 overflow-hidden">
+            <img
+              src="${r.heroPhoto}"
+              alt="${r.name}"
+              loading="lazy"
+              onload="this.classList.add('loaded')"
+              onerror="handleImgError(this, '${r.filterGroup}')"
+              class="food-photo food-photo-zoom w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-obsidian-900/20 to-obsidian-950/30"></div>
+
+            <!-- Top Left Featured / Category Badge -->
+            <div class="absolute top-3 left-3 flex flex-wrap items-center gap-1.5 pr-11">
+              ${r.featured ? `
+                <span class="bg-amberwarm-500 text-white text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+                  <i data-lucide="flame" class="w-3 h-3 fill-white"></i>
+                  <span>主打推薦</span>
+                </span>
+              ` : ''}
+              <span class="px-2.5 py-1 rounded-full bg-obsidian-950/85 backdrop-blur-sm border border-white/10 text-[11px] font-bold text-ivory-100 shadow-sm">
+                ${r.category}
+              </span>
+            </div>
+
+            <!-- Top Right Heart Favorite Button -->
+            <button
+              onclick="toggleFavorite('${r.id}', event)"
+              aria-label="收藏店家"
+              class="absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm border transition cursor-pointer ${isFav ? 'bg-obsidian-900/95 border-amberwarm-500/60 text-amberwarm-400' : 'bg-obsidian-950/80 border-white/15 text-ivory-200 hover:bg-obsidian-900 hover:text-amberwarm-400'}"
+            >
+              <i data-lucide="heart" class="w-4 h-4 ${isFav ? 'fill-amberwarm-400 text-amberwarm-400' : ''}"></i>
+            </button>
+
+            <!-- Bottom Overlay: Rating & Price Range -->
+            <div class="absolute bottom-3 inset-x-3 flex items-center justify-between text-white">
+              <div class="flex items-center gap-1 text-xs font-extrabold bg-obsidian-950/85 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-full">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-honey-500 text-honey-500"></i>
+                <span class="text-ivory-100">${ratingInfo.avg}</span>
+                <span class="text-ivory-300 font-medium">(${ratingInfo.count})</span>
+              </div>
+              <span class="text-xs font-extrabold bg-amberwarm-500/95 px-2.5 py-1 rounded-full shadow-md">
+                ${r.priceRange}
+              </span>
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="text-lg font-editorial font-black text-ivory-100 group-hover:text-amberwarm-400 transition leading-snug">
+                ${r.name}
+              </h3>
+
+              <!-- Meta Info -->
+              <div class="mt-2.5 space-y-1.5 text-xs text-ivory-200">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="footprints" class="w-3.5 h-3.5 text-amberwarm-400 shrink-0"></i>
+                  <span class="font-semibold">${r.walkTime}</span>
+                </div>
+                <div class="flex items-center gap-2 text-ivory-300">
+                  <i data-lucide="clock" class="w-3.5 h-3.5 text-ivory-300 shrink-0"></i>
+                  <span class="truncate">${r.hours}</span>
+                </div>
+                <div class="flex items-center gap-2 text-ivory-300">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5 text-ivory-300 shrink-0"></i>
+                  <span class="truncate">${r.address}</span>
+                </div>
+              </div>
+
+              <!-- Signature Dishes Pills -->
+              <div class="mt-3.5 pt-3 border-t border-obsidian-600 flex flex-wrap gap-1.5">
+                ${r.signatureDishes.slice(0, 3).map(d => `
+                  <span class="px-2 py-0.5 rounded-md bg-obsidian-950 border border-obsidian-600 text-[11px] font-semibold text-ivory-200">${d}</span>
+                `).join('')}
+                ${r.signatureDishes.length > 3 ? `<span class="px-2 py-0.5 rounded-md bg-obsidian-950 border border-obsidian-600 text-[11px] font-semibold text-ivory-300">+${r.signatureDishes.length - 3}</span>` : ''}
+              </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="mt-4 pt-3 border-t border-obsidian-600 flex items-center justify-between text-xs font-bold text-amberwarm-400">
+              <span>查看完整菜單與實拍圖集</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderRestaurantsList() {
+      const grid = document.getElementById('restaurants-grid');
+      if (!grid) return;
+
+      const keyword = (document.getElementById('restaurant-search')?.value || '').trim().toLowerCase();
+
+      const filtered = state.restaurants.filter(r => {
+        const matchCat = state.categoryFilter === 'all' || r.filterGroup === state.categoryFilter;
+        const matchKey = !keyword ||
+          r.name.toLowerCase().includes(keyword) ||
+          r.address.toLowerCase().includes(keyword) ||
+          r.category.toLowerCase().includes(keyword) ||
+          r.signatureDishes.some(d => d.toLowerCase().includes(keyword));
+        return matchCat && matchKey;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full bento-card p-10 text-center">
+            <div class="w-12 h-12 rounded-2xl bg-obsidian-700 text-ivory-300 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="search-x" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-base font-extrabold text-ivory-100">找不到符合條件的餐廳</h3>
+            <p class="text-xs text-ivory-300 mt-1">試試看清除搜尋關鍵字，或前往「新增餐廳」建立這家店！</p>
+          </div>
+        `;
+      } else {
+        grid.innerHTML = filtered.map(r => buildRestaurantCardHTML(r)).join('');
+      }
+      lucide.createIcons();
+    }
+
+    // Switch main gallery photo in Detail View
+    function switchDetailGalleryPhoto(photoUrl, caption, thumbIdx) {
+      const mainImg = document.getElementById('detail-main-gallery-img');
+      const captionEl = document.getElementById('detail-main-gallery-caption');
+      if (!mainImg) return;
+
+      mainImg.classList.remove('loaded');
+      mainImg.dataset.errStep = '0';
+      mainImg.src = photoUrl;
+      if (captionEl) captionEl.textContent = caption;
+
+      document.querySelectorAll('.detail-gallery-thumb').forEach((btn, idx) => {
+        if (idx === thumbIdx) {
+          btn.classList.add('ring-2', 'ring-amberwarm-500', 'scale-[1.03]');
+          btn.classList.remove('opacity-65');
+        } else {
+          btn.classList.remove('ring-2', 'ring-amberwarm-500', 'scale-[1.03]');
+          btn.classList.add('opacity-65');
+        }
+      });
+    }
+
+    function openRestaurantDetail(id, keepPrevTab = false) {
+      const r = state.restaurants.find(item => item.id === id);
+      if (!r) return;
+
+      if (!keepPrevTab && state.activeTab !== 'restaurant-detail') {
+        state.previousTabBeforeDetail = state.activeTab;
+      }
+      state.currentDetailId = id;
+
+      state.activeTab = 'restaurant-detail';
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+      const detailSec = document.getElementById('view-restaurant-detail');
+      detailSec.classList.remove('hidden');
+
+      const isFav = state.favorites.includes(r.id);
+      const ratingInfo = getRestaurantRating(r.id);
+      const storeReviews = state.reviews.filter(rev => rev.restaurantId === r.id);
+
+      const galleryItems = [
+        {
+          url: r.heroPhoto,
+          label: '店內與招牌主圖',
+          caption: r.galleryCaption || `${r.name}・實拍美食主視覺`
+        },
+        ...r.menu.map(m => ({
+          url: m.photo || r.heroPhoto,
+          label: m.name,
+          caption: `${m.name}（${m.price === 0 ? '內用免費續' : '$' + m.price}・約 ${m.kcal} kcal）`
+        }))
+      ];
+
+      // Top Actions
+      document.getElementById('detail-top-actions').innerHTML = `
+        <button onclick="toggleFavorite('${r.id}')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs sm:text-sm font-bold transition cursor-pointer ${isFav ? 'bg-amberwarm-500/15 border-amberwarm-500/45 text-amberwarm-300' : 'bg-obsidian-800 border-obsidian-600 text-ivory-100 hover:border-amberwarm-500'}">
+          <i data-lucide="heart" class="w-4 h-4 ${isFav ? 'fill-amberwarm-400 text-amberwarm-400' : ''}"></i>
+          <span>${isFav ? '已收藏店家' : '加入收藏'}</span>
+        </button>
+        <a href="${r.mapUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amberwarm-500 hover:bg-amberwarm-400 text-white text-xs sm:text-sm font-bold shadow-md shadow-amberwarm-500/20 transition">
+          <i data-lucide="map-pin" class="w-4 h-4"></i>
+          <span>開啟 Google 地圖查看實景照片</span>
+        </a>
+      `;
+
+      // Main Detail Content
+      document.getElementById('restaurant-detail-content').innerHTML = `
+        <!-- Hero Info & Interactive Photo Gallery Bento -->
+        <div class="bento-card overflow-hidden">
+          <!-- Interactive Photo Gallery Top Section -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 bg-obsidian-950 border-b border-obsidian-600">
+            <!-- Main Large Display Photo (8 cols) -->
+            <div class="lg:col-span-8 relative h-64 sm:h-80 lg:h-[380px] bg-obsidian-900 overflow-hidden">
+              <img
+                id="detail-main-gallery-img"
+                src="${galleryItems[0].url}"
+                alt="${r.name}"
+                onload="this.classList.add('loaded')"
+                onerror="handleImgError(this, '${r.filterGroup}')"
+                class="food-photo w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-transparent to-obsidian-950/30"></div>
+              <span class="absolute top-3.5 left-3.5 text-[11px] font-bold text-ivory-100 bg-obsidian-950/80 backdrop-blur-sm border border-white/15 px-3 py-1 rounded-full flex items-center gap-1.5">
+                <i data-lucide="camera" class="w-3.5 h-3.5 text-amberwarm-400"></i>
+                <span>實拍美食影像</span>
+              </span>
+              <div class="absolute bottom-3.5 inset-x-4 flex items-center justify-between gap-2 text-white">
+                <p id="detail-main-gallery-caption" class="text-xs sm:text-sm font-bold text-ivory-100 drop-shadow">
+                  ${galleryItems[0].caption}
+                </p>
+                <span class="text-[11px] font-semibold bg-obsidian-950/85 backdrop-blur-sm border border-obsidian-600 text-ivory-200 px-2.5 py-1 rounded-full shrink-0">
+                  點擊右側縮圖切換
+                </span>
+              </div>
+            </div>
+
+            <!-- Gallery Thumbnail Switcher (4 cols) -->
+            <div class="lg:col-span-4 p-4 sm:p-5 flex flex-col justify-between bg-obsidian-800">
+              <div>
+                <span class="text-[11px] font-extrabold uppercase tracking-wider text-amberwarm-400 flex items-center gap-1.5 mb-2.5">
+                  <i data-lucide="images" class="w-3.5 h-3.5"></i>
+                  <span>店內與招牌主圖 / 精選餐點圖集</span>
+                </span>
+                <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-2 gap-2.5 max-h-[260px] overflow-y-auto pr-1">
+                  ${galleryItems.map((g, idx) => `
+                    <button
+                      type="button"
+                      onclick="switchDetailGalleryPhoto('${g.url}', '${g.caption.replace(/'/g, "\\'")}', ${idx})"
+                      class="detail-gallery-thumb group text-left rounded-xl overflow-hidden border border-obsidian-600 bg-obsidian-950 transition cursor-pointer ${idx === 0 ? 'ring-2 ring-amberwarm-500 scale-[1.02]' : 'opacity-65 hover:opacity-100'}"
+                    >
+                      <div class="h-14 sm:h-16 w-full overflow-hidden bg-obsidian-900">
+                        <img
+                          src="${g.url}"
+                          alt="${g.label}"
+                          onload="this.classList.add('loaded')"
+                          onerror="handleImgError(this, '${r.filterGroup}')"
+                          class="food-photo w-full h-full object-cover"
+                        />
+                      </div>
+                      <p class="px-2 py-1 text-[10px] font-bold text-ivory-100 truncate">${g.label}</p>
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+
+              <div class="mt-3 pt-3 border-t border-obsidian-600 flex items-center justify-between text-[11px] text-ivory-300">
+                <span>共收錄 ${galleryItems.length} 張實拍餐點影像</span>
+                <span class="font-bold text-amberwarm-400">CYCU 食光圖鑑</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Restaurant Title & Structured Info -->
+          <div class="p-6 sm:p-8">
+            <div class="flex flex-wrap items-center gap-2 mb-3">
+              ${r.featured ? `<span class="px-3 py-1 rounded-full bg-amberwarm-500 text-white text-xs font-extrabold flex items-center gap-1"><i data-lucide="flame" class="w-3.5 h-3.5 fill-white"></i> 主打推薦</span>` : ''}
+              <span class="px-3 py-1 rounded-full bg-obsidian-950 border border-obsidian-600 text-xs font-bold text-ivory-200">${r.category}</span>
+              <span class="px-3 py-1 rounded-full bg-honey-500/15 border border-honey-500/35 text-xs font-extrabold text-honey-400 flex items-center gap-1">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-honey-500 text-honey-500"></i>
+                ${ratingInfo.avg} 分 (${ratingInfo.count} 則評論)
+              </span>
+            </div>
+
+            <h2 class="text-2xl sm:text-3xl font-editorial font-black text-ivory-100">${r.name}</h2>
+
+            <!-- Structured Info Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 pt-6 border-t border-obsidian-600 text-sm">
+              <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-obsidian-600">
+                <span class="text-xs font-bold text-ivory-300 flex items-center gap-1.5 mb-1">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amberwarm-400"></i> 店家地址
+                </span>
+                <p class="font-bold text-ivory-100">${r.address}</p>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-obsidian-600">
+                <span class="text-xs font-bold text-ivory-300 flex items-center gap-1.5 mb-1">
+                  <i data-lucide="phone" class="w-3.5 h-3.5 text-amberwarm-400"></i> 訂位與聯絡電話
+                </span>
+                <p class="font-bold text-ivory-100">${r.phone}</p>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-obsidian-600">
+                <span class="text-xs font-bold text-ivory-300 flex items-center gap-1.5 mb-1">
+                  <i data-lucide="wallet" class="w-3.5 h-3.5 text-amberwarm-400"></i> 參考消費區間
+                </span>
+                <p class="font-bold text-amberwarm-400">${r.priceRange}</p>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-obsidian-600">
+                <span class="text-xs font-bold text-ivory-300 flex items-center gap-1.5 mb-1">
+                  <i data-lucide="footprints" class="w-3.5 h-3.5 text-amberwarm-400"></i> 步行距離
+                </span>
+                <p class="font-bold text-ivory-100">${r.walkTime}</p>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-obsidian-600">
+                <span class="text-xs font-bold text-ivory-300 flex items-center gap-1.5 mb-1">
+                  <i data-lucide="clock" class="w-3.5 h-3.5 text-amberwarm-400"></i> 營業時間
+                </span>
+                <p class="font-bold text-ivory-100">${r.hours}</p>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-obsidian-600">
+                <span class="text-xs font-bold text-ivory-300 flex items-center gap-1.5 mb-1">
+                  <i data-lucide="timer" class="w-3.5 h-3.5 text-amberwarm-400"></i> 出餐速度參考
+                </span>
+                <p class="font-bold text-ivory-100">${r.prepSpeed}</p>
+              </div>
+            </div>
+
+            ${r.website ? `
+              <div class="mt-4 flex items-center gap-2 text-xs">
+                <span class="font-bold text-ivory-300">官方社群 / Instagram：</span>
+                <a href="${r.website}" target="_blank" rel="noopener noreferrer" class="text-amberwarm-400 font-bold underline hover:text-amberwarm-300">${r.website}</a>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+
+        <!-- Menu Cards Section WITH REAL DISH THUMBNAILS -->
+        <div class="bento-card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-extrabold text-ivory-100 flex items-center gap-2">
+              <i data-lucide="utensils" class="w-5 h-5 text-amberwarm-400"></i>
+              <span>招牌餐點與熱量參考</span>
+            </h3>
+            <span class="text-xs font-semibold text-ivory-300">共 ${r.menu.length} 道推薦餐點</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            ${r.menu.map((item, idx) => `
+              <div onclick="switchDetailGalleryPhoto('${item.photo || r.heroPhoto}', '${item.name}（${item.price === 0 ? '內用免費續' : '$' + item.price}・約 ${item.kcal} kcal）', ${idx + 1})" class="rounded-2xl bg-obsidian-950 border border-obsidian-600 overflow-hidden flex flex-col justify-between group cursor-pointer hover:border-amberwarm-500 transition">
+                <!-- Dish Thumbnail Image -->
+                <div class="relative h-36 w-full bg-obsidian-900 overflow-hidden">
+                  <img
+                    src="${item.photo || r.heroPhoto}"
+                    alt="${item.name}"
+                    loading="lazy"
+                    onload="this.classList.add('loaded')"
+                    onerror="handleImgError(this, '${r.filterGroup}')"
+                    class="food-photo food-photo-zoom w-full h-full object-cover"
+                  />
+                  <span class="absolute top-2.5 left-2.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-obsidian-950/85 backdrop-blur-sm border border-amberwarm-500/40 text-amberwarm-300 shadow-sm">
+                    ${item.tag || '人氣餐點'}
+                  </span>
+                  <span class="absolute bottom-2.5 right-2.5 text-[11px] font-bold text-ivory-100 bg-obsidian-950/85 backdrop-blur-sm border border-white/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <i data-lucide="flame" class="w-3 h-3 text-honey-400"></i>
+                    約 ${item.kcal} kcal
+                  </span>
+                </div>
+
+                <!-- Dish Info -->
+                <div class="p-4 flex-1 flex flex-col justify-between">
+                  <h4 class="text-base font-extrabold text-ivory-100 group-hover:text-amberwarm-400 transition">${item.name}</h4>
+                  <div class="mt-3 pt-2.5 border-t border-obsidian-600 flex items-center justify-between">
+                    <span class="text-xs text-ivory-300">參考單價</span>
+                    <span class="text-base font-extrabold text-amberwarm-400">${item.price === 0 ? '免費續用' : '$' + item.price}</span>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Store Reviews + Quick Review Form -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Store Reviews List (7 cols) -->
+          <div class="lg:col-span-7 bento-card p-6">
+            <h3 class="text-lg font-extrabold text-ivory-100 flex items-center gap-2 mb-4">
+              <i data-lucide="message-circle" class="w-5 h-5 text-amberwarm-400"></i>
+              <span>同學食記評價 (${storeReviews.length})</span>
+            </h3>
+            <div class="space-y-3">
+              ${storeReviews.length === 0
+                ? `<p class="text-xs text-ivory-300 py-4 text-center">尚無評論，快來搶先留下第一則心得吧！</p>`
+                : storeReviews.map(rev => buildReviewCardHTML(rev, false)).join('')
+              }
+            </div>
+          </div>
+
+          <!-- Quick Comment Form for This Store (5 cols) -->
+          <div class="lg:col-span-5 bento-card p-6">
+            <h3 class="text-base font-extrabold text-ivory-100 flex items-center gap-2 mb-3">
+              <i data-lucide="pen-tool" class="w-4 h-4 text-amberwarm-400"></i>
+              <span>為「${r.name}」寫評論</span>
+            </h3>
+            <form onsubmit="submitDetailReview(event, '${r.id}')" class="space-y-3.5">
+              <div>
+                <label class="block text-xs font-bold text-ivory-200 mb-1">你的暱稱</label>
+                <input id="detail-rev-author" type="text" placeholder="例如：中原吃貨" class="w-full px-3 py-2 rounded-xl bg-obsidian-950 border border-obsidian-600 text-xs sm:text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ivory-200 mb-1">評分星等</label>
+                <select id="detail-rev-rating" class="w-full px-3 py-2 rounded-xl bg-obsidian-950 border border-obsidian-600 text-xs sm:text-sm font-bold text-ivory-100 focus:outline-none focus:border-amberwarm-500">
+                  <option value="5">★★★★★ 5.0 激推必吃</option>
+                  <option value="4">★★★★☆ 4.0 很不錯會回訪</option>
+                  <option value="3">★★★☆☆ 3.0 中規中矩</option>
+                  <option value="2">★★☆☆☆ 2.0 略顯普通</option>
+                  <option value="1">★☆☆☆☆ 1.0 不太合胃口</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ivory-200 mb-1">點了哪道菜？</label>
+                <input id="detail-rev-dish" type="text" placeholder="例如：${r.signatureDishes[0] || '招牌餐點'}" class="w-full px-3 py-2 rounded-xl bg-obsidian-950 border border-obsidian-600 text-xs sm:text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ivory-200 mb-1">用餐心得 *</label>
+                <textarea id="detail-rev-comment" rows="3" required placeholder="分享味道、份量或推薦理由..." class="w-full px-3 py-2 rounded-xl bg-obsidian-950 border border-obsidian-600 text-xs sm:text-sm text-ivory-100 placeholder:text-ivory-400 focus:outline-none focus:border-amberwarm-500"></textarea>
+              </div>
+              <button type="submit" class="w-full py-2.5 rounded-xl bg-amberwarm-500 hover:bg-amberwarm-400 text-white text-xs sm:text-sm font-bold transition cursor-pointer">
+                送出評論
+              </button>
+            </form>
+          </div>
+        </div>
+      `;
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    function backFromDetail() {
+      switchTab(state.previousTabBeforeDetail || 'restaurants');
+    }
+
+    // =========================================================================
+    // 7. MODULE 3: FAVORITES VIEW
+    // =========================================================================
+    function toggleFavOnlyMode() {
+      state.favOnlyMode = !state.favOnlyMode;
+      const toggle = document.getElementById('fav-only-toggle');
+      const knob = document.getElementById('fav-only-knob');
+      if (state.favOnlyMode) {
+        toggle.classList.remove('bg-obsidian-600');
+        toggle.classList.add('bg-amberwarm-500');
+        knob.classList.add('translate-x-5');
+      } else {
+        toggle.classList.remove('bg-amberwarm-500');
+        toggle.classList.add('bg-obsidian-600');
+        knob.classList.remove('translate-x-5');
+      }
+      renderFavoritesView();
+    }
+
+    function renderFavoritesView() {
+      const grid = document.getElementById('favorites-grid');
+      if (!grid) return;
+
+      const list = state.favOnlyMode
+        ? state.restaurants.filter(r => state.favorites.includes(r.id))
+        : state.restaurants;
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full bento-card p-12 text-center">
+            <div class="w-14 h-14 rounded-2xl bg-amberwarm-500/15 border border-amberwarm-500/30 text-amberwarm-400 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="heart-off" class="w-7 h-7"></i>
+            </div>
+            <h3 class="text-lg font-extrabold text-ivory-100">你的收藏夾還是空的喔！</h3>
+            <p class="text-xs sm:text-sm text-ivory-300 mt-1 max-w-md mx-auto">
+              瀏覽「餐廳與餐點」時點擊愛心按鈕，就能把中原周邊愛店收進專屬口袋名單。
+            </p>
+            <button onclick="switchTab('restaurants')" class="mt-5 px-5 py-2.5 rounded-xl bg-amberwarm-500 hover:bg-amberwarm-400 text-white text-xs sm:text-sm font-bold transition cursor-pointer">
+              去逛逛中原餐廳
+            </button>
+          </div>
+        `;
+      } else {
+        grid.innerHTML = list.map(r => buildRestaurantCardHTML(r)).join('');
+      }
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // 8. MODULE 4: SHARE REVIEWS VIEW
+    // =========================================================================
+    function buildReviewCardHTML(rev, showRestaurantLink = true) {
+      const restaurant = state.restaurants.find(r => r.id === rev.restaurantId);
+      const storeName = restaurant ? restaurant.name : '中原周邊餐廳';
+      const stars = '★'.repeat(rev.rating) + '☆'.repeat(5 - rev.rating);
+
+      return `
+        <div class="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-600 shadow-bento">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              ${showRestaurantLink ? `
+                <button onclick="openRestaurantDetail('${rev.restaurantId}')" class="text-sm font-extrabold text-amberwarm-400 hover:underline flex items-center gap-1 mb-0.5 cursor-pointer">
+                  <i data-lucide="store" class="w-3.5 h-3.5"></i>
+                  <span>${storeName}</span>
+                </button>
+              ` : ''}
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-ivory-100">${rev.author || '中原匿名同學'}</span>
+                <span class="text-[11px] text-ivory-300">・${rev.date}</span>
+              </div>
+            </div>
+            <span class="text-xs font-extrabold text-honey-500 tracking-wider">${stars}</span>
+          </div>
+
+          ${rev.dish ? `
+            <div class="mt-2">
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amberwarm-500/15 border border-amberwarm-500/30 text-amberwarm-300 text-[11px] font-bold">
+                <i data-lucide="thumbs-up" class="w-3 h-3"></i>
+                推薦：${rev.dish}
+              </span>
+            </div>
+          ` : ''}
+
+          <p class="mt-2 text-xs sm:text-sm text-ivory-200 leading-relaxed">${rev.comment}</p>
+        </div>
+      `;
+    }
+
+    function setGlobalRating(star) {
+      state.globalRating = star;
+      const labels = {
+        1: '1.0 顆星・不太推薦',
+        2: '2.0 顆星・略顯普通',
+        3: '3.0 顆星・中規中矩',
+        4: '4.0 顆星・好吃會回訪',
+        5: '5.0 顆星・激推必吃！'
+      };
+      document.getElementById('global-rating-label').textContent = labels[star];
+      document.querySelectorAll('#global-star-picker .star-btn').forEach(btn => {
+        const s = Number(btn.dataset.star);
+        const icon = btn.querySelector('svg, i');
+        if (icon) {
+          if (s <= star) {
+            icon.classList.add('fill-honey-500', 'text-honey-500');
+            icon.classList.remove('text-obsidian-500');
+          } else {
+            icon.classList.remove('fill-honey-500', 'text-honey-500');
+            icon.classList.add('text-obsidian-500');
+          }
+        }
+      });
+    }
+
+    function updateReviewDishSuggestions() {
+      const select = document.getElementById('review-restaurant-select');
+      const chips = document.getElementById('review-dish-chips');
+      if (!select || !chips) return;
+
+      const r = state.restaurants.find(item => item.id === select.value);
+      if (!r) return;
+
+      chips.innerHTML = r.signatureDishes.map(dish => `
+        <button type="button" onclick="document.getElementById('review-dish-input').value='${dish}'" class="px-2.5 py-1 rounded-lg bg-obsidian-950 hover:bg-amberwarm-500/15 border border-obsidian-600 hover:border-amberwarm-500/40 text-[11px] font-semibold text-ivory-200 transition cursor-pointer">
+          + ${dish}
+        </button>
+      `).join('');
+    }
+
+    function renderGlobalReviewsView() {
+      const select = document.getElementById('review-restaurant-select');
+      const feed = document.getElementById('global-reviews-feed');
+      if (!select || !feed) return;
+
+      const currentVal = select.value;
+      select.innerHTML = state.restaurants.map(r => `
+        <option value="${r.id}">${r.name}</option>
+      `).join('');
+      if (currentVal && state.restaurants.some(r => r.id === currentVal)) {
+        select.value = currentVal;
+      }
+
+      updateReviewDishSuggestions();
+
+      const latest30 = state.reviews.slice(0, 30);
+      feed.innerHTML = latest30.map(rev => buildReviewCardHTML(rev, true)).join('');
+      lucide.createIcons();
+    }
+
+    function submitGlobalReview(event) {
+      event.preventDefault();
+      const restaurantId = document.getElementById('review-restaurant-select').value;
+      const author = document.getElementById('review-author-input').value.trim() || '中原食光旅人';
+      const dish = document.getElementById('review-dish-input').value.trim();
+      const comment = document.getElementById('review-comment-input').value.trim();
+
+      if (!comment) return;
+
+      const newReview = {
+        id: 'rev-' + Date.now(),
+        restaurantId,
+        author,
+        rating: state.globalRating,
+        dish,
+        comment,
+        date: new Date().toISOString().split('T')[0]
+      };
+
+      state.reviews.unshift(newReview);
+      saveState();
+
+      document.getElementById('review-dish-input').value = '';
+      document.getElementById('review-comment-input').value = '';
+      setGlobalRating(5);
+      renderGlobalReviewsView();
+      showToast('評論已成功發布！感謝你的分享');
+    }
+
+    function submitDetailReview(event, restaurantId) {
+      event.preventDefault();
+      const author = document.getElementById('detail-rev-author').value.trim() || '中原食光旅人';
+      const rating = Number(document.getElementById('detail-rev-rating').value) || 5;
+      const dish = document.getElementById('detail-rev-dish').value.trim();
+      const comment = document.getElementById('detail-rev-comment').value.trim();
+
+      if (!comment) return;
+
+      state.reviews.unshift({
+        id: 'rev-' + Date.now(),
+        restaurantId,
+        author,
+        rating,
+        dish,
+        comment,
+        date: new Date().toISOString().split('T')[0]
+      });
+      saveState();
+      openRestaurantDetail(restaurantId, true);
+      showToast('評論已發布並更新店家評分！');
+    }
+
+    // =========================================================================
+    // 9. MODULE 5: ADD RESTAURANT (SMART PARSER SIMULATOR + AUTO PHOTO MATCH)
+    // =========================================================================
+    function inferFilterGroup(category) {
+      if (category.includes('美式') || category.includes('漢堡')) return 'western';
+      if (category.includes('牛排') || category.includes('排餐')) return 'steak';
+      if (category.includes('日韓') || category.includes('咖哩')) return 'asian';
+      if (category.includes('甜品') || category.includes('飲料')) return 'dessert';
+      return 'local';
+    }
+
+    function updateAddPreviewCard() {
+      const nameInput = document.getElementById('add-name');
+      const catSelect = document.getElementById('add-category');
+      const previewImg = document.getElementById('add-preview-img');
+      const previewTitle = document.getElementById('add-preview-title');
+      const previewSub = document.getElementById('add-preview-sub');
+
+      if (!catSelect || !previewImg) return;
+      const category = catSelect.value;
+      const group = inferFilterGroup(category);
+      const photoBank = CATEGORY_PHOTO_BANK[group] || CATEGORY_PHOTO_BANK.western;
+
+      previewImg.classList.remove('loaded');
+      previewImg.dataset.errStep = '0';
+      previewImg.onerror = () => handleImgError(previewImg, group);
+      previewImg.src = photoBank.hero;
+
+      if (previewTitle) {
+        previewTitle.textContent = (nameInput?.value.trim()) || '輸入餐廳名稱即時預覽卡片視覺';
+      }
+      if (previewSub) {
+        previewSub.textContent = category;
+      }
+    }
+
+    function generateSmartMenu(category, rawDishes) {
+      const parsedNames = rawDishes
+        .split(/[,，、\n]+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      const fallbackPoolByGroup = {
+        western: ['主廚特調經典漢堡', '美式培根起司堡', '水牛城辣雞翅', '黃金美式脆薯', '香草奥利奥奶昔'],
+        steak: ['特級厚切沙朗牛排', '香煎黃金無骨雞排', '海陸豪華雙拼排餐', '黑胡椒嫩肩豬排', '酥皮濃湯與麵包'],
+        asian: ['濃厚熟成炸豬排咖哩', '韓式牛肉石鍋拌飯', '起司辣炒年糕', '唐揚炸雞歐姆蛋飯', '海鹽焦糖拿鐵'],
+        local: ['招牌綜合海鮮麵疙瘩', '現蒸多汁鮮肉湯包', '古早味酸辣湯', '紅油抄手乾拌麵', '綜合滷味拼盤'],
+        dessert: ['招牌綜合仙草奶凍', '黑糖珍珠仙草鮮奶', '手作芋圓嫩仙草冰', '焦糖烤布蕾', '抹茶生乳捲']
+      };
+
+      const group = inferFilterGroup(category);
+      const pool = fallbackPoolByGroup[group] || fallbackPoolByGroup.western;
+      const photoBank = CATEGORY_PHOTO_BANK[group] || CATEGORY_PHOTO_BANK.western;
+      const finalNames = [...parsedNames];
+
+      for (const fallback of pool) {
+        if (finalNames.length >= 5) break;
+        if (!finalNames.includes(fallback)) finalNames.push(fallback);
+      }
+
+      const tags = ['鎮店招牌', '人氣推薦', '主廚精選', '高 CP 值', '饕客必點'];
+      return finalNames.slice(0, 6).map((name, idx) => ({
+        name,
+        price: 110 + ((idx * 35 + name.length * 10) % 160),
+        kcal: 380 + ((idx * 95 + name.length * 25) % 450),
+        tag: tags[idx % tags.length],
+        photo: photoBank.dishes[idx % photoBank.dishes.length]
+      }));
+    }
+
+    function handleSmartAddRestaurant(event) {
+      event.preventDefault();
+      const name = document.getElementById('add-name').value.trim();
+      const category = document.getElementById('add-category').value;
+      const address = document.getElementById('add-address').value.trim() || '320桃園市中壢區實踐路商圈';
+      const walkTime = document.getElementById('add-walk').value.trim() || '距中原大學正門約 4 分鐘';
+      const priceRange = document.getElementById('add-price').value.trim() || '$130 - $240';
+      const mapUrl = document.getElementById('add-map-url').value.trim() ||
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('中原大學 ' + name)}`;
+      const rawDishes = document.getElementById('add-dishes').value.trim();
+
+      if (!name) return;
+
+      const overlay = document.getElementById('parsing-overlay');
+      const stepTitle = document.getElementById('parsing-step-title');
+      const bar = document.getElementById('parsing-progress-bar');
+
+      overlay.classList.remove('hidden');
+      bar.style.width = '30%';
+      stepTitle.textContent = '正在解析餐廳地標與營業資訊...';
+
+      setTimeout(() => {
+        bar.style.width = '72%';
+        stepTitle.textContent = '正在配對高解析美食攝影與生成熱量菜單...';
+      }, 450);
+
+      setTimeout(() => {
+        bar.style.width = '100%';
+        stepTitle.textContent = '建檔完成！已同步加入美食轉盤';
+      }, 900);
+
+      setTimeout(() => {
+        const group = inferFilterGroup(category);
+        const photoBank = CATEGORY_PHOTO_BANK[group] || CATEGORY_PHOTO_BANK.western;
+        const menu = generateSmartMenu(category, rawDishes);
+        const newId = 'custom-' + Date.now();
+        const newRestaurant = {
+          id: newId,
+          name,
+          featured: false,
+          category,
+          filterGroup: group,
+          heroPhoto: photoBank.hero,
+          galleryCaption: `${name}・${category}精選實拍`,
+          address,
+          phone: '現場候位 / 電話洽詢',
+          priceRange,
+          walkTime,
+          hours: '週一至週日 11:00 - 20:30',
+          prepSpeed: '中等（約 10-15 分鐘）',
+          signatureDishes: menu.map(m => m.name),
+          mapUrl,
+          website: '',
+          isCustom: true,
+          menu
+        };
+
+        state.restaurants.push(newRestaurant);
+        state.wheelSelectedIds.push(newId);
+        saveState();
+
+        overlay.classList.add('hidden');
+        bar.style.width = '25%';
+        document.getElementById('add-restaurant-form').reset();
+        updateAddPreviewCard();
+        renderManagedRestaurantsList();
+        showToast(`已新增「${name}」並加入美食轉盤！`);
+      }, 1250);
+    }
+
+    function deleteCustomRestaurant(id) {
+      const target = state.restaurants.find(r => r.id === id);
+      if (!target || !target.isCustom) return;
+
+      state.restaurants = state.restaurants.filter(r => r.id !== id);
+      state.favorites = state.favorites.filter(fid => fid !== id);
+      state.wheelSelectedIds = state.wheelSelectedIds.filter(wid => wid !== id);
+      saveState();
+      renderManagedRestaurantsList();
+      showToast(`已刪除自訂餐廳「${target.name}」`, 'info');
+    }
+
+    function resetToDefaultData() {
+      localStorage.removeItem(STORAGE_KEYS.RESTAURANTS);
+      localStorage.removeItem(STORAGE_KEYS.FAVORITES);
+      localStorage.removeItem(STORAGE_KEYS.REVIEWS);
+      localStorage.removeItem(STORAGE_KEYS.WHEEL_SELECTED);
+      loadState();
+      saveState();
+      renderManagedRestaurantsList();
+      updateWheelResultCard(state.restaurants[0], false);
+      showToast('已重置回預設中原美食資料！');
+    }
+
+    function renderManagedRestaurantsList() {
+      const container = document.getElementById('managed-restaurants-list');
+      const label = document.getElementById('managed-count-label');
+      if (!container) return;
+
+      if (label) label.textContent = `共 ${state.restaurants.length} 間`;
+
+      container.innerHTML = state.restaurants.map((r, index) => `
+        <div class="p-3 rounded-2xl bg-obsidian-950 border border-obsidian-600 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-12 h-12 rounded-xl overflow-hidden bg-obsidian-800 shrink-0">
+              <img
+                src="${r.heroPhoto}"
+                alt="${r.name}"
+                onload="this.classList.add('loaded')"
+                onerror="handleImgError(this, '${r.filterGroup}')"
+                class="food-photo w-full h-full object-cover"
+              />
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-extrabold text-amberwarm-400">#${index + 1}</span>
+                <h4 class="text-sm font-extrabold text-ivory-100 truncate">${r.name}</h4>
+                ${r.featured ? `<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amberwarm-500/20 text-amberwarm-300 shrink-0">主打</span>` : ''}
+                ${r.isCustom ? `<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-sage-500/20 text-sage-500 shrink-0">自訂</span>` : ''}
+              </div>
+              <p class="text-xs text-ivory-300 truncate mt-0.5">${r.category} ・ ${r.address}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="openRestaurantDetail('${r.id}')" class="px-3 py-1.5 rounded-xl bg-obsidian-800 border border-obsidian-600 hover:border-amberwarm-500 text-xs font-bold text-ivory-100 transition cursor-pointer">
+              詳情
+            </button>
+            ${r.isCustom ? `
+              <button onclick="deleteCustomRestaurant('${r.id}')" title="刪除此自訂店家" class="p-1.5 rounded-xl bg-obsidian-800 border border-obsidian-600 hover:border-red-400/60 text-ivory-300 hover:text-red-400 transition cursor-pointer">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // 10. INITIALIZATION ON WINDOW LOAD
+    // =========================================================================
+    window.addEventListener('resize', () => {
+      if (state.activeTab === 'wheel') {
+        drawWheel();
+      }
+    });
+
+    window.onload = function () {
+      loadState();
+      saveState();
+      updateWheelResultCard(state.restaurants[0], false);
+      switchTab('wheel');
+      lucide.createIcons();
+    };
+  </script>
+</body>
+</html>
